@@ -1,4 +1,0 @@
-% import features for training
-featuresSamples = csvread(strcat(pwd,'\Data\features.txt'));
-
-% import targets for training
