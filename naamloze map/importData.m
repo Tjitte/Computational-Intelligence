@@ -1,3 +1,5 @@
+function [TrainingSamplesOfFeatures, TrainingTargetsOfSamples] = importData()
+
 % import features for training
 TrainingSamplesOfFeatures = csvread(strcat(pwd,'\Data\features.txt'));
 
@@ -5,4 +7,4 @@ TrainingSamplesOfFeatures = csvread(strcat(pwd,'\Data\features.txt'));
 TrainingTargetsOfSamples = csvread(strcat(pwd,'\Data\targets.txt'));
 
 % import features to calculate targets
-SamplesOfFeatures = csvread(strcat(pwd,'\Data\unknown.txt'));
+% SamplesOfFeatures = csvread(strcat(pwd,'\Data\unknown.txt'));
