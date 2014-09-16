@@ -3,8 +3,8 @@ tic
 
 clear all
 close all
-for p=1:1
-    for weighttest=1:25
+for p=1:24
+    for weighttest=1:5
 % Import training data
 [TrainingSamplesOfFeatures,TrainingTargetsOfSamples] = importData();
 
@@ -17,7 +17,7 @@ Neurons = [input hiddenNeurons outputNeurons];
 % Set learning rate, threshold and maximum number of iterations
 alpha=0.8;
 beta=0.95;
-epochs = 40;
+epochs = 15;
 
 % Trainlength
 trainL=round(size(TrainingSamplesOfFeatures,1)*(2/3));
