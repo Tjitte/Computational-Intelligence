@@ -1,11 +1,11 @@
 \documentclass{scrartcl}
-
 \usepackage[utf8]{inputenc} % Unicode support (Umlauts etc.)
 \usepackage{hyperref} % Add a link to your document
 \usepackage{graphicx} % Add pictures to your document
 \usepackage{listings} % Source code formatting and highlighting
 \usepackage[top=75px, bottom=75px, left=85px, right=85px]{geometry} % Change page borders
 \usepackage{graphicx}
+\usepackage{mathtools}
 
 \begin{document}
 
@@ -24,7 +24,7 @@
   \maketitle \thispagestyle{empty} \pagebreak
   
   \section{Questions}
-  Here we will answer the questions of the first assigment.
+  Here we will answer the questions of the first assignment.
   
   \subsection{}
   Our group will be using 10 input neurons because the objects have ten different features.
@@ -34,27 +34,26 @@
   Hence, this is the amount of possible outcomes.
   
   \subsection{}
-  We will create a hidden layer with 12 hidden neurons. This is still a guess,  but we can try to change
-  this amount later.
+  For now, we have a hidden layer with 12 hidden neurons. There are many opinions about how many neurons to take, so we used the following formula: \\ \\ $\# \:hidden \:neurons = \frac{2} {3} \times (\# \:input \:neurons + \# \:output \:neurons) $
   
   \subsection{}
-  We will use the sigmoid function because we we think this will give the best result. We can calculate the
-  errors in the end much more precisely if we use this function.
+  We use the sigmoid function because our network should be able to deal with non-linear combinations of weights. Sigmoid function gives us values between 0 and 1 instead of a value of a flat 0 or a flat 1, which is given by the step function.
   
   \subsection{}
-  \includegraphics[scale = 0.7]{network.png}
+  \includegraphics[scale = 0.5]{network.png}
+  \\ Between the first and the second layer we have drawn all the connections, but between the second and the third we didn't just to keep a clear overview. Only the connections to the first output neuron are drawn, but of course each of output neurons is connected with each of the neurons in the hidden layer.
   
   \subsection{}
-  It is important that the program has a set of data as input at the targets for validation because we are dealing with a supervised neural network. This means we have inputs and also outputs to actually train the network. The test set is used after the program trained itself to check weather the weights also work for unused data in the training. If it is trained well, the program should be able to recognize the categories of the objects in the test set.
+  Deviding your dataset into a training set, a validation set and a test set is very useful to overcome the problem of over fitting. You train your network with the training set to adjust the weights. Then you use the accuracy of the validation set to compare with the accuracy of the training set to determine if overfitting is occurring. When you finally have a good set weights, you use the test set to check the actual performance of the weights on this data which has not been used before.
   
   \subsection{}
-  You can tests the program's performance by using such a test set. To make sure you don't find a local minimum or have smaller or higher errors, you should actually do cross validation (maybe k-fold). Here you divide your data in smaller sets and change their role(training set, ...). Then you should take the avg error and this is a better way to actually know the performance.
+  You can test the program's performance by using a test set as mentioned above. 
   
   \subsection{}
-  Our group thinks there are different ways to do this. One way is to set a threshold on the error. For example, if the error is lower than x, the weights are set correctly. In other words, you can give criteria on when the weights are good enough.
+ If at any moment overfitting is occurring, you should stop training your weights on the training set. If overfitting happens, you are training your weights too hard on the training set and therefore your set of weights won't be that accurate on the test set or other sets that haven't been introduced before.
   
   \subsection{}
-  With different initial weights our program gets different results. This happens because with the different initial weights, the weights can find another way to a maybe lower error. For example, some weights can be trained but get a local minimum as error, while other trained weights have a lower error. It depends on where you started.
-  
+  With different initial weights the program could get the same result.This happens when 2 different sets of initialized weights get trained, but the hill-climbing-algorithm finds the same (local) minimum for both sets of weights. On the other hand, the different initializations of the weights
+ can lead to different outcomes when the hill-climbing-algorithm finds a different (local) minimum for both sets of weights. That different (local) minimum can be lower than the other (local) minima, which means that the error is lower and thus the performance is better.
   
 \end{document}
