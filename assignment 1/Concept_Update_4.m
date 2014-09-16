@@ -3,21 +3,21 @@ tic
 
 clear all
 close all
-for p=1:24
-    for weighttest=1:5
+for p=1:1
+    for weighttest=1:25
 % Import training data
 [TrainingSamplesOfFeatures,TrainingTargetsOfSamples] = importData();
 
 % Numer of neurons in the layers
 input=size(TrainingSamplesOfFeatures,2);
 outputNeurons=7;
-hiddenNeurons=6+p;
+hiddenNeurons=23;
 Neurons = [input hiddenNeurons outputNeurons];
 
 % Set learning rate, threshold and maximum number of iterations
 alpha=0.8;
 beta=0.95;
-epochs = 15;
+epochs = 40;
 
 % Trainlength
 trainL=round(size(TrainingSamplesOfFeatures,1)*(2/3));
@@ -186,7 +186,7 @@ errors = zeros(epochs, 1);
     xlim([1, epoch+1]);
     ylim([0, max(errors)+0.1]);
     figure(2)
-    plot(hiddenNeurons,max(max(results(:,:,p))), 'd', 'Color',[X,Y,Z],'LineWidth',2)
+    plot(weighttest,max(max(results(:,:,p))), 'd', 'Color',[X,Y,Z],'LineWidth',2)
     hold on
 
 
