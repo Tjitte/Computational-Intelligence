@@ -4,20 +4,20 @@ tic
 clear all
 close all
 for p=1:24
-    for weighttest=1:5
+    for weighttest=1:20
 % Import training data
 [TrainingSamplesOfFeatures,TrainingTargetsOfSamples] = importData();
 
 % Numer of neurons in the layers
 input=size(TrainingSamplesOfFeatures,2);
 outputNeurons=7;
-hiddenNeurons=23;
+hiddenNeurons=p+6;
 Neurons = [input hiddenNeurons outputNeurons];
 
 % Set learning rate, threshold and maximum number of iterations
-alpha=0.8;
+alpha=0.5;
 beta=0.95;
-epochs = 15;
+epochs = 30;
 
 % Trainlength
 trainL=round(size(TrainingSamplesOfFeatures,1)*(2/3));
@@ -63,7 +63,7 @@ errors = zeros(epochs, 1);
 
             end
         
-        % if alpha becomes too big reduce it to 2.5
+%         if alpha becomes too big reduce it to 2.5
             if alpha>2.5
 %             alpha =2.5;
             end
@@ -147,10 +147,11 @@ errors = zeros(epochs, 1);
 
         if trainL~=length(TrainingSamplesOfFeatures)
     
-            desiredTest=TrainingTargetsOfSamples(trainL+1:length(TrainingTargetsOfSamples));    
+            desiredTest=TrainingTargetsOfSamples(trainL+1:length(TrainingTargetsOfSamples));
+            desiredTest2= zeros(7,1);
             actualtest{1}=TrainingSamplesOfFeatures(trainL+1:end,:);
             for i=trainL+1:length(TrainingSamplesOfFeatures)
-            
+            desiredTest2(TrainingTargetsOfSamples(i),i-trainL) = 1;
         
                 for k=1:length(w)
                     for j=1:Neurons(k+1)
@@ -162,40 +163,34 @@ errors = zeros(epochs, 1);
                 end
         
                 [Test(i-trainL,1),Test(i-trainL,2)]=max(actualtest{end}(i-trainL,:));
+                val(i-trainL,:)=(actualtest{end}(i-trainL,:)-desiredTest2(:,i-trainL)').^2;
                 
             end
             
         
         end
         results(epoch,weighttest,p)=(sum(round(Test(:,2))==desiredTest)/(length(TrainingTargetsOfSamples)-trainL))*100;
+        results2(epoch,weighttest,p)=sum(sum(val))/outputNeurons;
+        disp(['test: ' num2str(weighttest) ' number of hidden neurons: ' num2str(hiddenNeurons)])
         disp(['Number of correct targets : ' num2str(sum(round(Test(:,2))==desiredTest)) ' which is ' num2str(results(epoch,weighttest,p)) '% of total tested'])
 
-
-    	
-
-        
-    end
-    end
-    
     X=rand();
     Y=rand();
     Z=rand();
+    	
+        
+    end
+    Weights{p,weighttest}=w;
+    end
     
-%     plot(errors, 'Color',[X,Y,Z],'LineWidth',5)
+
+    
+%     plot(errors, 'Color',[X,Y,Z],'LineWidth',3)
     hold on
-    xlim([1, epoch+1]);
-    ylim([0, max(errors)+0.1]);
-    figure(2)
-    plot(weighttest,max(max(results(:,:,p))), 'd', 'Color',[X,Y,Z],'LineWidth',2)
+    axis([0 5 0 max(errors)])
+    plot(p,min(min(results2(:,:,p))),'d', 'Color',[X,Y,Z],'LineWidth',2)
     hold on
 
-
-% Set the plot axis limits
-
-
-Weights{p}=w;
-test(p,1)=p;
-test(p,2)=errors(end);
     
 end
 toc
