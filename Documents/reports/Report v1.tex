@@ -53,7 +53,50 @@
  If at any moment overfitting is occurring, you should stop training your weights on the training set. If overfitting happens, you are training your weights too hard on the training set and therefore your set of weights won't be that accurate on the test set or other sets that haven't been introduced before.
   
   \subsection{}
-  With different initial weights the program could get the same result.This happens when 2 different sets of initialized weights get trained, but the hill-climbing-algorithm finds the same (local) minimum for both sets of weights. On the other hand, the different initializations of the weights
+  With different initial weights the program could get the same result. This happens when 2 different sets of initialized weights get trained, but the hill-climbing-algorithm finds the same (local) minimum for both sets of weights. On the other hand, the different initializations of the weights
  can lead to different outcomes when the hill-climbing-algorithm finds a different (local) minimum for both sets of weights. That different (local) minimum can be lower than the other (local) minima, which means that the error is lower and thus the performance is better.
+ 
+ \subsection{}
+ For this question we tested networks with all possible amounts of hidden neurons between 7 and 30. We trained each of those 23 networks 20 times and plotted only their best result (minimal validation error and percentage of correct targets).
+ See figure~\ref{fig:figure_1} and figure~\ref{fig:figure_2} on page~\pageref{fig:figure_2}.
+
+ \begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Plot_Validation_Error.jpg}
+    \caption{Minimal validation errors for neurons 7-30}
+    \label{fig:figure_1}
+\end{figure}
+
+ \begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Plot_Correct_Targets.jpg}
+    \caption{Percentage of correct targets of neurons 7-30}
+    \label{fig:figure_2}
+\end{figure}
+
+\subsection{}
+As seen on the two plots, a network with 15 hidden neurons gives a good result as the minimal validation error is the lowest of all networks we tested and the percentage of correct targets is also very good. A network with 26 neurons has a higher rate of correctness, but it also has more computational power. Therefore the network with 15 hidden neurons is actually more efficient.
+
+\subsection{}
+The succesrate is     on the test set. This is almost the same as on the validation set because we stop our training the moment over fitting is occurring. This way the validation set gives a good indication of what the outcome of a test set would be.
+
+\subsection{}
+The meaning and purpose of a confusion matrix is that you can see where the most errors are made. You can see which input is classified wrong according to its expected outcome. For example, you can see the times an item of type 7 is classified wrong as an item of type 1 (etc). This can be useful to locate the combinations in which lots of mistakes are made.
+
+\subsection{}
+/
+
+\subsection{}
+/
+
+\subsection{}
+In general, the toolbox gets a better result by 1 or 2 percentages. This is because these tools use very sophisticated algorithms we don't have right now. However, sometimes it gets a totally bad result (+- 30\%) because it gets stuck in a bad local minimum. In our code this is solved by testing each set network a few times with different initial weights and take the best result of those combinations.
+
+
+
+
+
+
+ 
   
 \end{document}
