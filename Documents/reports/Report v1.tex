@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 
+
 \begin{document}
 
 \title{Computational Intelligence:
@@ -37,7 +38,7 @@
   For now, we have a hidden layer with 12 hidden neurons. There are many opinions about how many neurons to take, so we used the following formula: \\ \\ $\# \:hidden \:neurons = \frac{2} {3} \times (\# \:input \:neurons + \# \:output \:neurons) $
   
   \subsection{}
-  We use the sigmoid function because our network should be able to deal with non-linear combinations of weights. Sigmoid function gives us values between 0 and 1 instead of a value of a flat 0 or a flat 1, which is given by the step function.
+  We use the sigmoid function because our network should be able to deal with non-linear combinations of weights. The sigmoid function gives us a value between 0 and 1 instead of a value of a flat 0 or a flat 1, which is given by the step function.
   
   \subsection{}
   \includegraphics[scale = 0.5]{network.png}
@@ -60,7 +61,30 @@
  For this question we tested networks with all possible amounts of hidden neurons between 7 and 30. We trained each of those 23 networks 20 times and plotted only their best result (minimal validation error and percentage of correct targets).
  See figure~\ref{fig:figure_1} and figure~\ref{fig:figure_2} on page~\pageref{fig:figure_2}.
 
- \begin{figure}[p]
+\subsection{}
+As seen on the two plots, a network with 15 hidden neurons gives a good result as the minimal validation error is the lowest of all networks we tested and the percentage of correct targets is also very good. A network with 26 neurons has a higher rate of correctness, but it also has more computational power. Therefore the network with 15 hidden neurons is actually more efficient.
+See figure~\ref{fig:figure_3} on page~\pageref{fig:figure_3} for the performance of the network.
+
+
+\subsection{}
+The succesrate is  91.1\% on the test set. This is almost the same as on the validation set because we stop our training the moment over fitting is occurring. This way the validation set gives a good indication of what the outcome of a test set would be.
+
+\subsection{}
+The meaning and purpose of a confusion matrix is that you can see where the most errors are made. You can see which input is classified wrong according to its expected outcome. For example, you can see the times an item of type 7 is classified wrong as an item of type 1 (etc). This can be useful to locate the combinations in which lots of mistakes are made. See figure~\ref{fig:figure_4} on page~\pageref{fig:figure_4} for the confusion matrix of our final network.
+
+\subsection{}
+/
+
+\subsection{}
+/
+
+\subsection{}
+In general, the toolbox gets a better result by 1 or 2 percentages. This is because these tools use very sophisticated algorithms we don't have right now. However, sometimes it gets a totally bad result (+- 30\%) because it gets stuck in a bad local minimum. In our code this is solved by testing the network a few times with different initial weights and take the best result of those combinations. Also, the toolbox is faster with its calculation of the weights in the neural network than the solution we provided. Of course the tools are optimized in a very good way.
+
+\pagebreak
+
+
+\begin{figure}[p]
     \centering
     \includegraphics[width=0.8\textwidth]{Plot_Validation_Error.jpg}
     \caption{Minimal validation errors for neurons 7-30}
@@ -74,23 +98,20 @@
     \label{fig:figure_2}
 \end{figure}
 
-\subsection{}
-As seen on the two plots, a network with 15 hidden neurons gives a good result as the minimal validation error is the lowest of all networks we tested and the percentage of correct targets is also very good. A network with 26 neurons has a higher rate of correctness, but it also has more computational power. Therefore the network with 15 hidden neurons is actually more efficient.
+\pagebreak
 
-\subsection{}
-The succesrate is     on the test set. This is almost the same as on the validation set because we stop our training the moment over fitting is occurring. This way the validation set gives a good indication of what the outcome of a test set would be.
-
-\subsection{}
-The meaning and purpose of a confusion matrix is that you can see where the most errors are made. You can see which input is classified wrong according to its expected outcome. For example, you can see the times an item of type 7 is classified wrong as an item of type 1 (etc). This can be useful to locate the combinations in which lots of mistakes are made.
-
-\subsection{}
-/
-
-\subsection{}
-/
-
-\subsection{}
-In general, the toolbox gets a better result by 1 or 2 percentages. This is because these tools use very sophisticated algorithms we don't have right now. However, sometimes it gets a totally bad result (+- 30\%) because it gets stuck in a bad local minimum. In our code this is solved by testing each set network a few times with different initial weights and take the best result of those combinations.
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{validation_and_training_error.JPG}
+    \caption{Validation and training error, across epochs}
+    \label{fig:figure_3}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Confusion_matrix.JPG}
+    \caption{Confusion matrix}
+    \label{fig:figure_4}
+\end{figure}
 
 
 
