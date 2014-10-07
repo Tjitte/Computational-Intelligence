@@ -1,6 +1,9 @@
 %% Variables
 
-
+clear all
+close all 
+clc
 
 %% Input Maze
 
+ = dlmread('Mazes\easy_maze.txt');
