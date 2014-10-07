@@ -1,0 +1,6 @@
+%% Variables
+
+
+
+%% Input Maze
+
