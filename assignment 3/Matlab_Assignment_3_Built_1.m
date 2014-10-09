@@ -46,56 +46,81 @@ pherMarix=training1Maze;
 Pos = beginPos;
 q=0;
 
+% While ants are running towards end
 while Pos ~= endPos
     
+    % Number of iterations is higher
     q=q+1;
     
+    % List of previous position (important for not going to previous place)
     PosList(q,:) = Pos;
     
     
-    
+    % For every possible next position
     for i=1:4
         
         
-        
+        % Calculate the position next the the current position
         choices(i,:)= Pos+windDir(i,:);
         
+        
+        % If is it a valid position
         if  choices(i,1) >= 1 && ...
             choices(i,1) <= mazeSize(1,1) && ...
             choices(i,2) >= 1 && ...
             choices(i,2) <= mazeSize(1,2)
-
+            
+            % insert the property (wall or road)(0 or 1)
             choicesProperty(i)=training1Maze(choices(i,1),choices(i,2));
 
         else
-
+            
+            % if it is not valid, it should be 0
             choicesProperty(i)=0;
 
         end
         
     end
     
+    
+    %for all choices
     for i=1:length(choicesProperty)
         
         
-        
+        % If the choice is 1
         if choicesProperty(i) == 1;
  
-            
+            %calculate the newPos and check if it is already visited
             posNew=Pos+windDir(i,:);
   
             I = sum(PosList(:, 1) == posNew(1) & PosList(:, 2) == posNew(2));
             
+            % If so, then change its choiceProperty to 0
             if I 
                 
-                choicesProperty(i)=0;
+                choicesProperty(i)=2;
                 
             end
                 
         end
         
+        
     end
     
+    for i=1:length(choicesProperty)
+        counter = 0;
+        pher = zeros(1,4);
+        if choiceProperty(i) == 1;
+            pheromone(i) = pherMatrix(Pos + windDir(i,:));
+            counter = counter+1;
+        end
+    end
+    
+    
+        
+    
+    
+   %TIJDELIJK !!!! 
    Pos=endPos;
     
 end
