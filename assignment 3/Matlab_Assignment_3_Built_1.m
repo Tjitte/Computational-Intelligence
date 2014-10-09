@@ -39,21 +39,21 @@ endPos = training1Maze_c(2,:)+1;
 
 mazeSize = size(training1Maze);
 
-pherMarix=training1Maze;
+pherMatrix=training1Maze;
 
 %%
 
 Pos = beginPos;
-q=0;
+q=1;
 
 % While ants are running towards end
-while Pos ~= endPos
+while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
     
     % Number of iterations is higher
     q=q+1;
     
     % List of previous position (important for not going to previous place)
-    PosList(q,:) = Pos;
+    PosList(1,:) = beginPos;
     
     
     % For every possible next position
@@ -105,22 +105,45 @@ while Pos ~= endPos
         end
         
         
+        
     end
     
+    pher = zeros(1,4);
+
     for i=1:length(choicesProperty)
         counter = 0;
-        pher = zeros(1,4);
-        if choiceProperty(i) == 1;
-            pheromone(i) = pherMatrix(Pos + windDir(i,:));
-            counter = counter+1;
+        
+
+        if choicesProperty(i) == 1;
+            NewPos=Pos + windDir(i,:);
+            disp(NewPos)
+            pher(:,i) = pherMatrix(NewPos(1,1),NewPos(1,2));
+            disp(pher)
         end
     end
     
+
+    probs = pher/sum(pher);
     
-        
+    random = rand();
+    disp(probs)
     
+    if random<probs(1)
+        Pos=Pos+windDir(1,:);
+    elseif random>probs(1) && rand<probs(1)+probs(2)
+        Pos=Pos+windDir(2,:);
+    elseif random>probs(1)+probs(2) && rand<probs(1)+probs(2)+probs(3)
+        Pos=Pos+windDir(3,:);
+    elseif random>probs(1)+probs(2)+probs(3)
+        Pos=Pos+windDir(4,:);
+    end
+
     
+   PosList(q,:) = Pos;
    %TIJDELIJK !!!! 
-   Pos=endPos;
+   %Pos=endPos;
     
 end
+
+plot(PosList(:,2),-PosList(:,1)+1)
+axis([0 mazeSize(1,2) -mazeSize(1,1) 0])

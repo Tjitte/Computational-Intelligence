@@ -39,68 +39,111 @@ endPos = training1Maze_c(2,:)+1;
 
 mazeSize = size(training1Maze);
 
-pherMarix=training1Maze;
+pherMatrix=training1Maze;
 
 %%
 
 Pos = beginPos;
-q=0;
-PosList(2,:)=[2,1];
-while Pos ~= endPos
+q=1;
+
+% While ants are running towards end
+while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
     
+    % Number of iterations is higher
     q=q+1;
     
-    PosList(q,:) = Pos;
+    % List of previous position (important for not going to previous place)
+    PosList(1,:) = beginPos;
     
     
-    
+    % For every possible next position
     for i=1:4
         
         
-        
+        % Calculate the position next the the current position
         choices(i,:)= Pos+windDir(i,:);
         
+        
+        % If is it a valid position
         if  choices(i,1) >= 1 && ...
             choices(i,1) <= mazeSize(1,1) && ...
             choices(i,2) >= 1 && ...
             choices(i,2) <= mazeSize(1,2)
-
+            
+            % insert the property (wall or road)(0 or 1)
             choicesProperty(i)=training1Maze(choices(i,1),choices(i,2));
 
         else
-
+            
+            % if it is not valid, it should be 0
             choicesProperty(i)=0;
 
         end
         
     end
     
+    
+    %for all choices
     for i=1:length(choicesProperty)
         
         
-        
+        % If the choice is 1
         if choicesProperty(i) == 1;
+ 
+            %calculate the newPos and check if it is already visited
+            posNew=Pos+windDir(i,:);
+  
+            I = sum(PosList(:, 1) == posNew(1) & PosList(:, 2) == posNew(2));
             
-            disp(Pos+windDir(i,:))
-            
-            pos=Pos+windDir(i,:);
-            
-            x=pos(:,1)==PosList(:,1);
-            y=post(:,2)==posList(:,2);
-            
-            xx=max(x);
-            yy=max(y);
-            
-            if ~ismember(Pos+windDir(i,:),PosList)
+            % If so, then change its choiceProperty to 0
+            if I 
                 
-                choicesProperty(i)=0;
+                choicesProperty(i)=2;
                 
             end
                 
         end
         
+        
+        
     end
     
-   Pos=endPos;
+    pher = zeros(1,4);
+
+    for i=1:length(choicesProperty)
+        counter = 0;
+        
+
+        if choicesProperty(i) == 1;
+            NewPos=Pos + windDir(i,:);
+            disp(NewPos)
+            pher(:,i) = pherMatrix(NewPos(1,1),NewPos(1,2));
+            disp(pher)
+        end
+    end
+    
+
+    probs = pher/sum(pher);
+    
+    random = rand();
+    
+    
+    if random<probs(1)
+        Pos=Pos+windDir(1,:);
+    elseif random>probs(1) && rand<probs(1)+probs(2)
+        Pos=Pos+windDir(2,:);
+    elseif random>probs(1)+probs(2) && rand<probs(1)+probs(2)+probs(3)
+        Pos=Pos+windDir(3,:);
+    elseif random>probs(1)+probs(2)+probs(3)
+        Pos=Pos+windDir(4,:);
+    end
+
+    
+   PosList(q,:) = Pos;
+   %TIJDELIJK !!!! 
+   %Pos=endPos;
     
 end
+
+plot(PosList(:,2),-PosList(:,1)+1)
+axis([0 mazeSize(1,2) -mazeSize(1,1) 0])
