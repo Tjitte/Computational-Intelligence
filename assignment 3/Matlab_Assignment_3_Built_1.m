@@ -93,7 +93,7 @@ while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
             I = sum(PosList(:, 1) == posNew(1) & PosList(:, 2) == posNew(2));
             
             % If so, then change its choiceProperty to 0
-            if I 
+            if sum(PosList(:, 1) == posNew(1) & PosList(:, 2) == posNew(2));
                 
                 choicesProperty(i)=2;
                 
@@ -121,7 +121,9 @@ while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
             pher(:,i) = pherMatrix(NewPos(1,1),NewPos(1,2));
             
         end
+        
     end
+
     
     % creating the probability's of choosing the directions
     probs = pher/sum(pher);
@@ -133,11 +135,11 @@ while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
     % choose that one elseif the random number lies between the probability
     % of the first and second direction choose that one etc
     
-    if random<probs(1)
+    if random<=probs(1)
         Pos=Pos+windDir(1,:);
-    elseif random>probs(1) && rand<probs(1)+probs(2)
+    elseif random>probs(1) && random<=probs(1)+probs(2)
         Pos=Pos+windDir(2,:);
-    elseif random>probs(1)+probs(2) && rand<probs(1)+probs(2)+probs(3)
+    elseif random>probs(1)+probs(2) && random<=probs(1)+probs(2)+probs(3)
         Pos=Pos+windDir(3,:);
     elseif random>probs(1)+probs(2)+probs(3)
         Pos=Pos+windDir(4,:);
@@ -145,6 +147,10 @@ while Pos(1,1) ~= endPos(1,1) || Pos(1,2) ~= endPos(1,2)
 
    % keep track of the route the ant took
    PosList(q,:) = Pos;
+   
+   if q>100
+       break
+   end
     
 end
 
