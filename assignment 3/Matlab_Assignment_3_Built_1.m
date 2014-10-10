@@ -190,4 +190,7 @@ for i=0:mazeSize(1,1)+1;
             
         end
     end
+    
+    % making plot area square
+    axis square
 end
