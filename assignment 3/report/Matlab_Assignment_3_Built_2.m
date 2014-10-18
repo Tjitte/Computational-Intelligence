@@ -6,19 +6,19 @@ clc
 %% Input Maze
 
 % input of the mazes 
-Maze = dlmread('Mazes\medium maze.txt','',1,0);
+Maze = dlmread('Mazes/medium maze.txt','',1,0);
 
 % input of the starting and ending coordinates of the maze
-Maze_c = load('Mazes\medium coordinates.txt');
+Maze_c = load('Mazes/medium coordinates.txt');
 
 %% Variables
 
 % input
-iterations = 1000;
+iterations = 100;
 ants = 10;
 pheromone = 30;
-evaporation = 0.95;
-stopcriterian = 0.90;
+evaporation = 0.6;
+stopcriterian = 0.9;
 windDir(1,:)=[0,1];
 windDir(2,:)=[-1,0];
 windDir(3,:)=[0,-1];
@@ -268,7 +268,7 @@ end
 %% plotting theroute of an ant and plotting the maze with begin position as well as end position
     
     % plot the route of the ant
-    plot(PosList(2,:),-PosList(1,:)+1,'Color',[rand(),rand(),rand()])
+    %plot(PosList(2,:),-PosList(1,:)+1,'Color',[rand(),rand(),rand()])
     hold on
 
     % setting the axes ranges

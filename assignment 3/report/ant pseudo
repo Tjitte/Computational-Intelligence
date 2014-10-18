@@ -1,0 +1,22 @@
+or each iteration{
+ 	for each ant{
+		 look to the possible next moves and create a vector [1x4]
+		 put ones if the next move is a possible one
+		 put two if the move is possible but in your visited vector
+		 
+		 create pherVector [1x4] and calculate the pher on each next possible move
+		 create chanceVector[1x4] and calculate the chances of the moves
+		 for each 1 in the vector
+		 	look for pher on the next move and fill it in the pherVector
+			
+		 take a random number and choose a move regarding to the pher on each possible next move.
+		 
+		 if no moves possible but a move that is to a already visited spot{
+		 	take move anyway and get back to last choice point
+		}
+	}
+	
+	calculate length of path
+	put the pheromones in pherMatrix
+	do evaporation
+}
