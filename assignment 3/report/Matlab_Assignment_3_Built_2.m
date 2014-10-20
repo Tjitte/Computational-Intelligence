@@ -5,32 +5,19 @@ clc
 
 %% Input Maze
 
+mazestring = 'Mazes\hard';
+
 % input of the mazes 
-<<<<<<< HEAD:assignment 3/report/Matlab_Assignment_3_Built_2.m
-Maze = dlmread('Mazes/medium maze.txt','',1,0);
+Maze = dlmread([mazestring ' maze.txt'],'',1,0);
 
 % input of the starting and ending coordinates of the maze
-Maze_c = load('Mazes/medium coordinates.txt');
-=======
-Maze = dlmread('Mazes\hard maze.txt','',1,0);
-
-% input of the starting and ending coordinates of the maze
-Maze_c = load('Mazes\hard coordinates.txt');
->>>>>>> FETCH_HEAD:assignment 3/Matlab_Assignment_3_Built_2.m
+Maze_c = load([mazestring ' coordinates.txt']);
 
 %% Variables
 
 % input
-iterations = 100;
-<<<<<<< HEAD:assignment 3/report/Matlab_Assignment_3_Built_2.m
-ants = 10;
-pheromone = 30;
-evaporation = 0.6;
-stopcriterian = 0.9;
-=======
 pheromone = 850;
-evaporation = 0.5;
->>>>>>> FETCH_HEAD:assignment 3/Matlab_Assignment_3_Built_2.m
+evaporation = 0.05;
 windDir(1,:)=[0,1];
 windDir(2,:)=[-1,0];
 windDir(3,:)=[0,-1];
@@ -42,13 +29,16 @@ k=0;
 beginPos = Maze_c(1,:)+1;
 endPos = Maze_c(2,:)+1;
 while 1==1
+
+    Maze = dlmread([mazestring ' maze.txt'],'',1,0);
     mazeSize = size(Maze);
     k=k+1;
     PosBestOwn = zeros(2,1000000);
     s=0;
     pherMatrix=Maze;
-    ants=4;
-
+    ants=10;
+    
+    
     clear PosList
     clear PosList2
     clear pherCurMatrix
@@ -60,9 +50,9 @@ while 1==1
     PosList = cell(1,1);
     PosList2 = cell(1,1);
     choices = zeros(4,2);
-    pherCurMatrix=cell(iterations);
+    pherCurMatrix=cell(100);
 
-    for i = 1:iterations
+    for i = 1:100
         for j = 1:ants
             PosList{i,j} = zeros(2,1);
             PosList2{i,j} = zeros(2,1);
@@ -79,8 +69,13 @@ while 1==1
         o=o+1;
         if o>40 && ants > 1
             ants=ants-1;
-            o=0;
+           
         end
+        
+         if evaporation <= 0.995
+            evaporation = evaporation + 0.005;
+            o=0;
+         end
     %     ants = round(ants/sqrt(itt)) + 50;
     %     pheromone = itt *pheromone;
     %     
@@ -141,10 +136,14 @@ while 1==1
                 % In case the number of possible unchecked routes is zero
 
                 p=1;
-                while sum(choicesProperty(:,q) == 1) == 0
 
+                while sum(choicesProperty(:,q) == 1) == 0
+                    
+
+                    
                     Pos=PosList{itt,ant}(:,q-p)';
                     PosList2{itt,ant}(:,r) = Pos;
+                  
                         % For every possible next position
                     for i=1:4
 
@@ -185,8 +184,15 @@ while 1==1
 
                     r=r+1;
                     p=p+1;
+                    
+                    
+                    if (sum(choicesProperty(:,q) == 1) + sum(choicesProperty(:,q) == 2)) == 1
+                        Maze(Pos(1,1),Pos(1,2))=0;
+                    end
 
                 end
+                
+                
 
                             % creating a matrix for the pheromones in all posible directions
                 pher = zeros(1,4);
@@ -215,7 +221,7 @@ while 1==1
                 
                
 
-                if sum((choicesProperty(:,q-1) == 1) + (choicesProperty(:,q-1) == 2))>=3 && q>2 
+                if sum((choicesProperty(:,q-1) == 1) + (choicesProperty(:,q-1) == 2))>=2 && q>2 
                     
                     if choice(q-1)~=choice(q-2)
                        LastDifChoice = choice(q-2);
@@ -286,8 +292,17 @@ while 1==1
 
             end
 
+            if length(PosList{itt,ant})< length(PosBestOwn)
+                PosBestOwn = PosList{itt,ant};
+                s=0;
+            
+                pher_pp = pheromone/(length(PosList{itt,ant})*10)*2;
+                
+            else
+                pher_pp = pheromone/(length(PosList{itt,ant})*10);
+                
 
-            pher_pp = pheromone/(length(PosList{itt,ant}));
+            end
 
             pherCurMatrix{itt,ant} = zeros(mazeSize(1,1),mazeSize(1,2));
 
@@ -308,10 +323,7 @@ while 1==1
 
             end
 
-            if length(PosList{itt,ant})< length(PosBestOwn)
-                PosBestOwn = PosList{itt,ant};
-                s=0;
-            end
+
 
 
 
@@ -337,79 +349,19 @@ while 1==1
         maxpher = max(max(pherMatrix));
         minpher = min(min(pherMatrix));
 
-        if itt>3
-            if s>ants*1000 || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1}));
+        if itt>5
+            if (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
                 converged(k) = length(PosList{itt,ant});
                 break
             end
         end
     end
 end
-%% plotting theroute of an ant and plotting the maze with begin position as well as end position
-    
-<<<<<<< HEAD:assignment 3/report/Matlab_Assignment_3_Built_2.m
-    % plot the route of the ant
-    %plot(PosList(2,:),-PosList(1,:)+1,'Color',[rand(),rand(),rand()])
-    hold on
+%% Plotting the route of the ant
 
-    % setting the axes ranges
-    axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
-=======
-%     % plot the route of the ant
-%     plot(PosList(2,:),-PosList(1,:)+1,'Color',[rand(),rand(),rand()])
-%     hold on
-% 
-%     % setting the axes ranges
-%     axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
->>>>>>> FETCH_HEAD:assignment 3/Matlab_Assignment_3_Built_2.m
+% input of the mazes 
+% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
 
-
-% looping through the whole maze
-for i=0:mazeSize(1,1)+1;
-    for j=0:mazeSize(1,2)+1;
-        
-        % if the i or j is not in the matrix create an X
-        if i < 1 || i > mazeSize(1,1) || j < 1 || j > mazeSize(1,2)
-            
-            plot(j,-i+1,'x','linewidth',mazeSize(1,1)/10)
-
-        
-        else
-            
-            % if the position on the maze has a wall (0) plot an X there
-            if Maze(i,j)==0
-                
-                plot(j,-i+1,'x','linewidth',mazeSize(1,2)/10)
-                
-            % if  the postion on the maze is the end position plot a green
-            % square
-            elseif i== endPos(1,1) && j== endPos(1,2)
-                
-                
-                plot(j,-i+1, 'gs','linewidth',5)
-            
-            % if the position on the maze is the begin position plot a
-            % magenta square
-            elseif i== beginPos(1,1) && j== beginPos(1,2)
-                
-                plot(j,-i+1, 'ms','linewidth',5)
-                
-            end
-            
-        end
-    end
-    
-
-end
-
-    hFig = figure(1);
-    set(hFig, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
-    movegui(hFig,'center')
-    % making plot area square
-%     axis square
-
-close(figure(1))
-%% Debug
  h = figure(2);
  
  hold on
@@ -419,15 +371,16 @@ close(figure(1))
  
 % setting the axes ranges
 axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
+MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
 
     % looping through the whole maze
     f=0;
-    MatrixPlot=zeros(2,mazeSize(1,1)*mazeSize(1,2));
     for i=0:mazeSize(1,1)+1;
         for j=0:mazeSize(1,2)+1;
             
             % if the i or j is not in the matrix create an X
             if i < 1 || i > mazeSize(1,1) || j < 1 || j > mazeSize(1,2)
+                
                 f=f+1;
                 MatrixPlot(:,f) = [j ; -i+1];
                 
@@ -435,21 +388,31 @@ axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
 
                 % if the position on the maze has a wall (0) plot an X there
                 if Maze(i,j)==0
+                    
                     f=f+1;
                     MatrixPlot(:,f) = [j ; -i+1];
 
                 end
-
+                
+                if Maze(i,j)==1
+                    
+                    f=f+1;
+                    MatrixPlot(:,f)=[0 ; 0];
+                     
+                end
+                    
             end
+
         end
        
     end
     
-    h=plot(MatrixPlot(1,1:1),MatrixPlot(2,1:1),'x','linewidth',mazeSize(1,2)/10);
-    for f=2:mazeSize(1,2):f
-        set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1:2)));
+    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'x','linewidth',mazeSize(1,2)/10);
+    for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
+        set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
         drawnow
     end
+    
 
 Posfinal=beginPos;
 q=1;
@@ -470,22 +433,48 @@ while ~sum(posfinalList(1, i) == endPos(1,2) & posfinalList(2, i) == endPos(1,1)
     
     drawnow
     i=i+1;
-
+    
 end
 
 
-%%
+%% Plotting graphical the ammount of pheremones on a certain spot
 
- h = figure(2);
- hold on
- set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
- movegui(h,'center')
+% input of the mazes 
+% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+
+% input of the starting and ending coordinates of the maze
+Maze_c = load([mazestring ' coordinates.txt']);
+h = figure(2);
+hold on
+set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
+movegui(h,'center')
 
 for i = 1:mazeSize(1,1)
     
     for j = 1:mazeSize(1,2)
         
-        plot(j,-i,'x','Color',[1-pherMatrix(i,j)/maxpher,((pherMatrix(i,j)/maxpher)),0],'LineWidth',18)
+        
+        for k=1:4
+            dir = [i,j] - windDir(k,:);
+            
+            if dir(1,1) ~=0 && dir(1,2) ~=0 && dir(1,1) < mazeSize(1,1) && dir(1,2) < mazeSize(1,2)
+                
+                pherclose(k) = pherMatrix(dir(1,1),dir(1,2));
+            
+            else
+                pherclose(k) = 0;
+            end
+        end
+        
+        pherclose(5) = pherMatrix(i,j);
+        
+        if sum(pherclose == 0) == 5
+        
+            pherclose(1) = inf;
+            
+        end
+        
+        plot(j,-i,'d','Color',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0],'LineWidth',12,'MarkerFaceColor',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0])
         hold on
         
     end
