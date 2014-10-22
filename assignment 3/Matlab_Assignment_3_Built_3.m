@@ -61,8 +61,11 @@ while 1==1
         end
 
     end
+    
     itt=0;
     o=0;
+
+    
     while 1==1
         itt=itt+1;
         o=o+1;
@@ -80,8 +83,8 @@ while 1==1
     %     pheromone = itt *pheromone;
     %     
         for ant = 1:ants
-        checkList{itt,ant} = [];
-        PosList2{itt,ant}=[];
+            checkList{itt,ant} = [];
+            PosList2{itt,ant}=[];
 
             q=1;
             r=1;
@@ -140,12 +143,24 @@ while 1==1
                 p=1;
 
                 while sum(choicesProperty(:,q) == 1) == 0
-
+                    y=1;
+                    if ant == ants && r>1 
+                        if length(checkList{itt,ant})>=1 && length(checkList{itt,ant-1})>=1
+                            for i=1:ants-1
+                                if sum(checkList{itt,ant}(1, r-1) == checkList{itt,ant-1}(1, :) & checkList{itt,ant}(2, r-1) == checkList{itt,ant-1}(2, :))
+                                    y=y+1;
+                                    if y == ants
+                                    end
+                                end
+                            end
+                        end
+                    end
                     
-                    if ((sum(choicesProperty(:,q-1) == 1) + sum(choicesProperty(:,q-1) == 2)) <=2)
+                    if ((sum(choicesProperty(:,q-1) == 1) + sum(choicesProperty(:,q-1) == 2)) <=4) && ant == ants && y==ants
                         Maze(Pos(1,1),Pos(1,2))=0;
                     end
                     
+                    checkList{itt,ant}(:,r) = Pos;
                     Pos=PosList{itt,ant}(:,q-p)';
                     PosList2{itt,ant}(:,r) = Pos;
                   
@@ -295,9 +310,7 @@ while 1==1
 
             end
 
-            
             pher_pp = pheromone/(length(PosList{itt,ant}));
-
             pherCurMatrix{itt,ant} = zeros(mazeSize(1,1),mazeSize(1,2));
 
             for i=1:length(PosList{itt,ant})
@@ -322,12 +335,7 @@ while 1==1
                 PosBestOwn = PosList{itt,ant};
                 s=0;
             
-                
             end
-
-
-
-
 
         disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(posfinalList)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
         drawnow
