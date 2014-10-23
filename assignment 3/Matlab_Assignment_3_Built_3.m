@@ -37,7 +37,7 @@ while 1==1
     PosBestOwn = zeros(2,1000000);
     s=0;
     pherMatrix=Maze;
-    ants=2;
+    ants=20;
     
     
     clear PosList
@@ -417,7 +417,7 @@ MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
        
     end
     
-    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'x','linewidth',mazeSize(1,2)/10);
+    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'+','linewidth',mazeSize(1,2)/8.5);
     for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
         set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
         drawnow

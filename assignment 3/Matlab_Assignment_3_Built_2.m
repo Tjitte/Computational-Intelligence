@@ -17,7 +17,7 @@ Maze_c = load([mazestring ' coordinates.txt']);
 
 % input
 pheromone = 850;
-evaporation = 0.1;
+evaporation = 0.9;
 windDir(1,:)=[0,1];
 windDir(2,:)=[-1,0];
 windDir(3,:)=[0,-1];
@@ -352,7 +352,7 @@ while 1==1
         minpher = min(min(pherMatrix));
 
         if itt>5
-            if (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+            if s>200 || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
                 converged(k) = length(PosList{itt,ant});
                 break
             end
@@ -362,7 +362,7 @@ end
 %% Plotting the route of the ant
 
 % input of the mazes 
-% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+Maze = dlmread([mazestring ' maze.txt'],'',1,0);
 
  h = figure(2);
  
@@ -409,7 +409,7 @@ MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
        
     end
     
-    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'x','linewidth',mazeSize(1,2)/10);
+    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'xr','linewidth',mazeSize(1,2)/10);
     for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
         set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
         drawnow
@@ -422,8 +422,8 @@ posfinalList(:,q) = Posfinal;
 
 choicesfinal = zeros(1,4);
 i=1;
-h=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xr','LineWidth',5);
-j=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xm','LineWidth',2);
+h=plot(posfinalList(2,i),-posfinalList(1,i)+1,'x','LineWidth',5);
+j=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xc','LineWidth',2);
 
 while ~sum(posfinalList(1, i) == endPos(1,2) & posfinalList(2, i) == endPos(1,1));
     % plot the route of the ant
@@ -437,7 +437,6 @@ while ~sum(posfinalList(1, i) == endPos(1,2) & posfinalList(2, i) == endPos(1,1)
     i=i+1;
     
 end
-
 
 %% Plotting graphical the ammount of pheremones on a certain spot
 

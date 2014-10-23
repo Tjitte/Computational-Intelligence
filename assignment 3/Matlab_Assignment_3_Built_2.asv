@@ -17,7 +17,7 @@ Maze_c = load([mazestring ' coordinates.txt']);
 
 % input
 pheromone = 850;
-evaporation = 0.1;
+evaporation = 0.9;
 windDir(1,:)=[0,1];
 windDir(2,:)=[-1,0];
 windDir(3,:)=[0,-1];
@@ -37,7 +37,7 @@ while 1==1
     PosBestOwn = zeros(2,1000000);
     s=0;
     pherMatrix=Maze;
-    ants=2;
+    ants=5;
     
     
     clear PosList
@@ -66,7 +66,6 @@ while 1==1
     while 1==1
         itt=itt+1;
         o=o+1;
-        PosList2{itt,ant}=[];
 
         if o>40 && ants > 2
             ants=ants-1;
@@ -82,6 +81,7 @@ while 1==1
     %     
         for ant = 1:ants
         checkList{itt,ant} = [];
+        PosList2{itt,ant}=[];
 
             q=1;
             r=1;
@@ -295,7 +295,8 @@ while 1==1
 
             end
 
-
+            
+            pher_pp = pheromone/(length(PosList{itt,ant}));
 
             pherCurMatrix{itt,ant} = zeros(mazeSize(1,1),mazeSize(1,2));
 
@@ -321,7 +322,6 @@ while 1==1
                 PosBestOwn = PosList{itt,ant};
                 s=0;
             
-                pher_pp = pheromone/(length(PosList{itt,ant}));
                 
             end
 
@@ -362,7 +362,7 @@ end
 %% Plotting the route of the ant
 
 % input of the mazes 
-% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+Maze = dlmread([mazestring ' maze.txt'],'',1,0);
 
  h = figure(2);
  
