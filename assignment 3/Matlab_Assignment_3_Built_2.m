@@ -5,7 +5,7 @@ clc
 
 %% Input Maze
 
-mazestring = 'Mazes\insane';
+mazestring = 'Mazes\hard';
 
 % input of the mazes 
 Maze = dlmread([mazestring ' maze.txt'],'',1,0);
@@ -326,7 +326,7 @@ while 1==1
             end
 
 
-
+        pathLengthAnt(ant,itt,k)=length(PosList{itt,ant});
 
 
         disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(posfinalList)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
@@ -350,15 +350,34 @@ while 1==1
 
         maxpher = max(max(pherMatrix));
         minpher = min(min(pherMatrix));
-
+       
+        
         if itt>5
-            if s>200 || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+            if itt == 20 || s>200 %%|| (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+                    
                 converged(k) = length(PosList{itt,ant});
+                [size1,size2,size3] =size(pathLengthAnt);
+                for i=1:size2
+                    meanAnt(i)=mean(mean(pathLengthAnt(:,i,:)));
+                    drawnow
+                end
+                    
                 break
+                
+                
+                
             end
         end
     end
+    
+    if k==50;
+        break
+    end
+    
+
 end
+
+plot(1:size2,meanAnt,'xr','LineWidth',5)
 %% Plotting the route of the ant
 
 % input of the mazes 
@@ -409,7 +428,7 @@ MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
        
     end
     
-    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'xr','linewidth',mazeSize(1,2)/10);
+    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'xk','linewidth',mazeSize(1,2)/10);
     for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
         set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
         drawnow
@@ -422,8 +441,8 @@ posfinalList(:,q) = Posfinal;
 
 choicesfinal = zeros(1,4);
 i=1;
-h=plot(posfinalList(2,i),-posfinalList(1,i)+1,'x','LineWidth',5);
-j=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xc','LineWidth',2);
+h=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xr','LineWidth',5);
+j=plot(posfinalList(2,i),-posfinalList(1,i)+1,'xm','LineWidth',2);
 
 while ~sum(posfinalList(1, i) == endPos(1,2) & posfinalList(2, i) == endPos(1,1));
     % plot the route of the ant
@@ -438,47 +457,47 @@ while ~sum(posfinalList(1, i) == endPos(1,2) & posfinalList(2, i) == endPos(1,1)
     
 end
 
-%% Plotting graphical the ammount of pheremones on a certain spot
-
-% input of the mazes 
-% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
-
-% input of the starting and ending coordinates of the maze
-Maze_c = load([mazestring ' coordinates.txt']);
-h = figure(2);
-hold on
-set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
-movegui(h,'center')
-
-for i = 1:mazeSize(1,1)
-    
-    for j = 1:mazeSize(1,2)
-        
-        
-        for k=1:4
-            dir = [i,j] - windDir(k,:);
-            
-            if dir(1,1) ~=0 && dir(1,2) ~=0 && dir(1,1) < mazeSize(1,1) && dir(1,2) < mazeSize(1,2)
-                
-                pherclose(k) = pherMatrix(dir(1,1),dir(1,2));
-            
-            else
-                pherclose(k) = 0;
-            end
-        end
-        
-        pherclose(5) = pherMatrix(i,j);
-        
-        if sum(pherclose == 0) == 5
-        
-            pherclose(1) = inf;
-            
-        end
-        
-        plot(j,-i,'d','Color',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0],'LineWidth',12,'MarkerFaceColor',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0])
-        hold on
-        
-    end
-end
-
-drawnow
+% %% Plotting graphical the ammount of pheremones on a certain spot
+% 
+% % input of the mazes 
+% % Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+% 
+% % input of the starting and ending coordinates of the maze
+% Maze_c = load([mazestring ' coordinates.txt']);
+% h = figure(2);
+% hold on
+% set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
+% movegui(h,'center')
+% 
+% for i = 1:mazeSize(1,1)
+%     
+%     for j = 1:mazeSize(1,2)
+%         
+%         
+%         for k=1:4
+%             dir = [i,j] - windDir(k,:);
+%             
+%             if dir(1,1) ~=0 && dir(1,2) ~=0 && dir(1,1) < mazeSize(1,1) && dir(1,2) < mazeSize(1,2)
+%                 
+%                 pherclose(k) = pherMatrix(dir(1,1),dir(1,2));
+%             
+%             else
+%                 pherclose(k) = 0;
+%             end
+%         end
+%         
+%         pherclose(5) = pherMatrix(i,j);
+%         
+%         if sum(pherclose == 0) == 5
+%         
+%             pherclose(1) = inf;
+%             
+%         end
+%         
+%         plot(j,-i,'d','Color',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0],'LineWidth',12,'MarkerFaceColor',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0])
+%         hold on
+%         
+%     end
+% end
+% 
+% drawnow
