@@ -1,4 +1,4 @@
-
+function [pathLength] = shortestPath(beginPoint,endPoint,n)
 %% Input Maze
 
 mazestring = 'Mazes/hard';
@@ -20,16 +20,13 @@ windDir(3,:)=[0,-1];
 windDir(4,:)=[1,0];
 
 pathLength = zeros(2,1000000);
-
-k=0;
-beginPos = Maze_c(1,:)+1;
-endPos = Maze_c(2,:)+1;
-while 1==1
+beginPos = beginPoint+1;
+endPos = endPoint+1;
+for k=1:n
 
     Maze = dlmread([mazestring ' maze.txt'],'',1,0);
     backupMaze = dlmread([mazestring ' maze.txt'],'',1,0);
     mazeSize = size(Maze);
-    k=k+1;
     PosBestOwn = zeros(2,1000000);
     s=0;
     pherMatrix=Maze;
@@ -325,7 +322,7 @@ while 1==1
         pathLengthAnt(ant,itt,k)=length(PosList{itt,ant});
 
 
-        disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
+        %disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
         drawnow
         end
 
@@ -349,7 +346,7 @@ while 1==1
        
         
         if itt>5
-            if itt == 20 || s>200 %%|| (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+            if itt == 6 || s>200 %%|| (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
                     
                 converged(k) = length(PosList{itt,ant});
                 [size1,size2,size3] =size(pathLengthAnt);
@@ -365,93 +362,86 @@ while 1==1
             end
         end
     end
-    
-    if k==50;
-        break
-    end
-    
-
 end
 
-plot(1:size2,meanAnt,'xr','LineWidth',5)
-%% Plotting the route of the ant
-
-% input of the mazes 
-Maze = dlmread([mazestring ' maze.txt'],'',1,0);
-
- h = figure(2);
- 
- hold on
-
- set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
- movegui(h,'center')
- 
-% setting the axes ranges
-axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
-MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
-
-    % looping through the whole maze
-    f=0;
-    for i=0:mazeSize(1,1)+1;
-        for j=0:mazeSize(1,2)+1;
-            
-            % if the i or j is not in the matrix create an X
-            if i < 1 || i > mazeSize(1,1) || j < 1 || j > mazeSize(1,2)
-                
-                f=f+1;
-                MatrixPlot(:,f) = [j ; -i+1];
-                
-            else
-
-                % if the position on the maze has a wall (0) plot an X there
-                if Maze(i,j)==0
-                    
-                    f=f+1;
-                    MatrixPlot(:,f) = [j ; -i+1];
-
-                end
-                
-                if Maze(i,j)==1
-                    
-                    f=f+1;
-                    MatrixPlot(:,f)=[0 ; 0];
-                     
-                end
-                    
-            end
-
-        end
-       
-    end
-    
-    h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'xk','linewidth',mazeSize(1,2)/10);
-    for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
-        set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
-        drawnow
-    end
-    
-
-Posfinal=beginPos;
-q=1;
-pathLength(:,q) = Posfinal;
-
-choicesfinal = zeros(1,4);
-i=1;
-h=plot(pathLength(2,i),-pathLength(1,i)+1,'xr','LineWidth',5);
-j=plot(pathLength(2,i),-pathLength(1,i)+1,'xm','LineWidth',2);
-
-while ~sum(pathLength(1, i) == endPos(1,2) & pathLength(2, i) == endPos(1,1));
-    % plot the route of the ant
-    
-    set(h,'Xdata',pathLength(2,i),'Ydata',-pathLength(1,i)+1);
-    set(j,'Xdata',pathLength(2,1:i),'Ydata',-pathLength(1,1:i)+1);
-
-    hold on
-    
-    drawnow
-    i=i+1;
-    
-end
+% %% Plotting the route of the ant
+% 
+% % input of the mazes 
+% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+% 
+%  h = figure(2);
+%  
+%  hold on
+% 
+%  set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
+%  movegui(h,'center')
+%  
+% % setting the axes ranges
+% axis([-1 mazeSize(1,2)+2 -mazeSize(1,1)-1 2])
+% MatrixPlot = zeros(2,(mazeSize(1,1)+2)*(mazeSize(1,2)+2));
+% 
+%     % looping through the whole maze
+%     f=0;
+%     for i=0:mazeSize(1,1)+1;
+%         for j=0:mazeSize(1,2)+1;
+%             
+%             % if the i or j is not in the matrix create an X
+%             if i < 1 || i > mazeSize(1,1) || j < 1 || j > mazeSize(1,2)
+%                 
+%                 f=f+1;
+%                 MatrixPlot(:,f) = [j ; -i+1];
+%                 
+%             else
+% 
+%                 % if the position on the maze has a wall (0) plot an X there
+%                 if Maze(i,j)==0
+%                     
+%                     f=f+1;
+%                     MatrixPlot(:,f) = [j ; -i+1];
+% 
+%                 end
+%                 
+%                 if Maze(i,j)==1
+%                     
+%                     f=f+1;
+%                     MatrixPlot(:,f)=[0 ; 0];
+%                      
+%                 end
+%                     
+%             end
+% 
+%         end
+%        
+%     end
+%     
+%     h=plot(MatrixPlot(1,1),MatrixPlot(2,1),'xk','linewidth',mazeSize(1,2)/10);
+%     for f=2:length(MatrixPlot)/(mazeSize(1,1)+2):length(MatrixPlot)
+%         set(h,'Xdata',MatrixPlot(1,1:f+mazeSize(1,2)),'Ydata',MatrixPlot(2,1:f+mazeSize(1,2)));
+%         drawnow
+%     end
+%     
+% 
+% Posfinal=beginPos;
+% q=1;
+% pathLength(:,q) = Posfinal;
+% 
+% choicesfinal = zeros(1,4);
+% i=1;
+% h=plot(pathLength(2,i),-pathLength(1,i)+1,'xr','LineWidth',5);
+% j=plot(pathLength(2,i),-pathLength(1,i)+1,'xm','LineWidth',2);
+% 
+% while ~sum(pathLength(1, i) == endPos(1,2) & pathLength(2, i) == endPos(1,1));
+%     % plot the route of the ant
+%     
+%     set(h,'Xdata',pathLength(2,i),'Ydata',-pathLength(1,i)+1);
+%     set(j,'Xdata',pathLength(2,1:i),'Ydata',-pathLength(1,1:i)+1);
+% 
+%     hold on
+%     
+%     drawnow
+%     i=i+1;
+%     
+% end
 
 % %% Plotting graphical the ammount of pheremones on a certain spot
 % 
@@ -497,3 +487,5 @@ end
 % end
 % 
 % drawnow
+pathLength = length(pathLength);
+end
