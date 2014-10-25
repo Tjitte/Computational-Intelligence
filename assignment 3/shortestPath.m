@@ -1,4 +1,4 @@
-function [pathLength] = shortestPath(beginPoint,endPoint,n)
+function [pathLength] = shortestPath(beginPoint,endPoint,n,stopiterations)
 %% Input Maze
 
 mazestring = 'Mazes/hard';
@@ -322,7 +322,7 @@ for k=1:n
         pathLengthAnt(ant,itt,k)=length(PosList{itt,ant});
 
 
-        %disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
+        disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
         drawnow
         end
 
@@ -346,7 +346,7 @@ for k=1:n
        
         
         if itt>5
-            if itt == 6 || s>200 %%|| (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+            if itt == stopiterations || s>200 || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
                     
                 converged(k) = length(PosList{itt,ant});
                 [size1,size2,size3] =size(pathLengthAnt);
@@ -361,6 +361,11 @@ for k=1:n
                 
             end
         end
+        if stopiterations < 5 
+            if itt == stopiterations || s>200
+                break
+            end
+        end   
     end
 end
 
