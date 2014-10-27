@@ -1,7 +1,7 @@
 
 %% Input Maze
 
-mazestring = 'Mazes/medium';
+mazestring = 'Mazes/hard';
 
 % input of the mazes 
 Maze = dlmread([mazestring ' maze.txt'],'',1,0);
@@ -366,7 +366,7 @@ while 1==1
         end
     end
     
-    if k==200;
+    if k==50;
         break
     end
     
@@ -375,50 +375,50 @@ end
 
 
 
-% %% Plotting graphical the ammount of pheremones on a certain spot
-% 
-% % input of the mazes 
-% % Maze = dlmread([mazestring ' maze.txt'],'',1,0);
-% 
-% % input of the starting and ending coordinates of the maze
-% Maze_c = load([mazestring ' coordinates.txt']);
-% h = figure(2);
-% hold on
-% set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
-% movegui(h,'center')
-% 
-% for i = 1:mazeSize(1,1)
-%     
-%     for j = 1:mazeSize(1,2)
-%         
-%         
-%         for k=1:4
-%             dir = [i,j] - windDir(k,:);
-%             
-%             if dir(1,1) ~=0 && dir(1,2) ~=0 && dir(1,1) < mazeSize(1,1) && dir(1,2) < mazeSize(1,2)
-%                 
-%                 pherclose(k) = pherMatrix(dir(1,1),dir(1,2));
-%             
-%             else
-%                 pherclose(k) = 0;
-%             end
-%         end
-%         
-%         pherclose(5) = pherMatrix(i,j);
-%         
-%         if sum(pherclose == 0) == 5
-%         
-%             pherclose(1) = inf;
-%             
-%         end
-%         
-%         plot(j,-i,'d','Color',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0],'LineWidth',12,'MarkerFaceColor',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0])
-%         hold on
-%         
-%     end
-% end
-% 
-% drawnow
+%% Plotting graphical the ammount of pheremones on a certain spot
+
+% input of the mazes 
+% Maze = dlmread([mazestring ' maze.txt'],'',1,0);
+
+% input of the starting and ending coordinates of the maze
+Maze_c = load([mazestring ' coordinates.txt']);
+h = figure(2);
+hold on
+set(h, 'Position', [0 0 mazeSize(1,2)*15 mazeSize(1,1)*15]);
+movegui(h,'center')
+
+for i = 1:mazeSize(1,1)
+    
+    for j = 1:mazeSize(1,2)
+        
+        
+        for k=1:4
+            dir = [i,j] - windDir(k,:);
+            
+            if dir(1,1) ~=0 && dir(1,2) ~=0 && dir(1,1) < mazeSize(1,1) && dir(1,2) < mazeSize(1,2)
+                
+                pherclose(k) = pherMatrix(dir(1,1),dir(1,2));
+            
+            else
+                pherclose(k) = 0;
+            end
+        end
+        
+        pherclose(5) = pherMatrix(i,j);
+        
+        if sum(pherclose == 0) == 5
+        
+            pherclose(1) = inf;
+            
+        end
+        
+        plot(j,-i,'d','Color',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0],'LineWidth',12,'MarkerFaceColor',[1-pherMatrix(i,j)/max(pherclose),((pherMatrix(i,j)/max(pherclose))),0])
+        hold on
+        
+    end
+end
+
+drawnow
 %%
 lengte = 0;
 lengte = length(pathLength)+lengte-1;
@@ -451,7 +451,7 @@ k=2;
         
     end
 
-fid = fopen('5_medium.txt','w');
+fid = fopen('5_hard.txt','w');
 
 for i=1:2
     fprintf(fid,'%s\n',num2str(winddir{i}));

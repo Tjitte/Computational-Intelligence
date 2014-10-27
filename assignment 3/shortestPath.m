@@ -1,4 +1,4 @@
-function [pathLength] = shortestPath(beginPoint,endPoint,n,stopiterations)
+function [pathLength,Path] = shortestPath(beginPoint,endPoint,n,stopiterations)
 %% Input Maze
 
 mazestring = 'Mazes/hard';
@@ -20,8 +20,8 @@ windDir(3,:)=[0,-1];
 windDir(4,:)=[1,0];
 
 pathLength = zeros(2,1000000);
-beginPos = beginPoint+1;
-endPos = endPoint+1;
+beginPos = fliplr(beginPoint+1);
+endPos = (endPoint+1);
 for k=1:n
 
     Maze = dlmread([mazestring ' maze.txt'],'',1,0);
@@ -85,7 +85,6 @@ for k=1:n
 
             % While ants are running towards end
             while Pos(1,2) ~= endPos(1,1) || Pos(1,1) ~= endPos(1,2)
-                tic
                 % Number of iterations is higher
                 q=q+1;
 
@@ -298,12 +297,12 @@ for k=1:n
                 pherCurMatrix{itt,ant}(PosList{itt,ant}(1,i),PosList{itt,ant}(2,i)) = pherCurMatrix{itt,ant}(PosList{itt,ant}(1,i),PosList{itt,ant}(2,i))+pher_pp;
 
             end
-            
+            Pathmaybe =PosList{itt,ant};
             PosList{itt,ant}(:,length(PosList{itt,ant})+1:length(PosList2{itt,ant})+length(PosList{itt,ant})) = PosList2{itt,ant};    
             s=s+1;
             
             if length(PosList{itt,ant}) < length(pathLength)
-
+                Path = Pathmaybe;
                 pathLength = PosList{itt,ant};
                 a = ant;
                 b = itt;
@@ -322,7 +321,7 @@ for k=1:n
         pathLengthAnt(ant,itt,k)=length(PosList{itt,ant});
 
 
-        disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
+%         disp(['iteration: ' num2str(itt) ' | ant: ' num2str(ant) ' | # no better solution: ' num2str(s) ' | Best pathlength: ' num2str(length(pathLength)) ' | Current best: ' num2str(length(PosBestOwn)) ' | Current Pathlength: ' num2str(length(PosList{itt,ant}))]);
         drawnow
         end
 
