@@ -99,7 +99,7 @@ bestPath = 100000000;
 for reiter = 1:Reiterate
     %% Creating random chromosomes
     amountchromo = 50;
-    chromo = zeros(amountchromo,nodes,iterations);
+    chromo = zeros(amountchromo,nodes,1);
     random = 1;
     s = 0;
 
@@ -136,14 +136,14 @@ for reiter = 1:Reiterate
             end
         end
         
-%         % first point should be last point
-%         for i = 1:length(chromo(:,1,iter))
-%             Path{i,length(chromo(1,:,iter)),iter}=Pathwayf{(chromo(i,end,iter)),chromo(i,1,iter)};
-%             fitness(i,iter) = fitness(i,iter) + connectionsf((chromo(i,end,iter)),chromo(i,1,iter));
-%         end
+        % first point should be last point
+        for i = 1:length(chromo(:,1,iter))
+            Path{i,length(chromo(1,:,iter)),iter}=Pathwayf{(chromo(i,end,iter)),chromo(i,1,iter)};
+            fitness(i,iter) = fitness(i,iter) + connectionsf((chromo(i,end,iter)),chromo(i,1,iter));
+        end
 
         [pathlength,chromosome]=min(fitness(:,iter));
-        fitness(:,iter) = 1./fitness(:,iter).^2*100000;
+        fitness(:,iter) = 1./fitness(:,iter)*100000;
         fitnessRatio(:,iter) = fitness(:,iter)./sum(fitness(:,iter));
         
         distribution(1,iter)=0;
@@ -151,77 +151,82 @@ for reiter = 1:Reiterate
 
         amountselections = 2;
 
-        for i=1:amountselections:amountchromo
+        for i=1:amountchromo
            %% selecting
+           % selection the best solution - elitism 
+           if i==1
+                [elit, loca] = max(fitnessRatio(:,iter));
+                chromo(i,:,iter+1)=chromo(loca,:,iter);
 
-            for k=1:amountchromo/amountselections
-                select =zeros(1,amountselections);
-                while length(unique(select)) ~= amountselections
-                    for p=1:amountselections
-                        random = rand;
-                        for j=1:amountchromo
-                            if distribution(j,iter) < random && distribution(j+1,iter) > random
-                                select(p) = j;
-                                break
+           end    
+               
+           if i>1
+                for k=1:amountchromo;
+                    select =zeros(1,amountselections);
+                    while length(unique(select)) ~= amountselections
+                        for p=1:amountselections
+                            random = rand;
+                            for j=1:amountchromo
+                                if distribution(j,iter) < random && distribution(j+1,iter) > random
+                                    select(p) = j;
+                                    break
+                                end
                             end
                         end
                     end
+
+
                 end
 
+            %% Crossover
 
-            end
+                pcrossover = 0.7;
+                random2 = rand;
 
-        %% Crossover
+                if random2 < pcrossover
+                    random = round(rand()*18+0.5);
 
-            pcrossover = 0.7;
-            random2 = rand;
+                    tempvect=zeros(1,nodes);
 
-            if random2 < pcrossover
-                random = round(rand()*18+0.5);
+                    tempvect(1:random)=chromo(select(1),1:random,iter);
 
-                tempvect=zeros(1,nodes);
+                    newchromoloop=random;
+                    for loopchromo=1:nodes
 
-                tempvect(1:random)=chromo(select(1),1:random,iter);
+                        if sum(chromo(select(2),loopchromo,iter) ==  tempvect) == 0;
+                            newchromoloop=newchromoloop+1;
+                            tempvect(newchromoloop)= chromo(select(2),loopchromo,iter);
 
-                newchromoloop=random;
-                for loopchromo=1:nodes
-
-                    if sum(chromo(select(2),loopchromo,iter) ==  tempvect) == 0;
-                        newchromoloop=newchromoloop+1;
-                        tempvect(newchromoloop)= chromo(select(2),loopchromo,iter);
-
+                        end
                     end
+
+                    chromo(i,:,iter+1)=tempvect;
+
                 end
+    %             if random2 < pcrossover
+    % 
+    %                 tempvect=zeros(1,nodes);
+    % 
+    %                 tempvect(1:random)=chromo(select(2),1:random,iter);
+    % 
+    %                 newchromoloop=random;
+    %                 for loopchromo=1:nodes
+    % 
+    %                     if sum(chromo(select(1),loopchromo,iter) ==  tempvect) == 0;
+    %                         newchromoloop=newchromoloop+1;
+    %                         tempvect(newchromoloop)= chromo(select(1),loopchromo,iter);
+    % 
+    %                     end
+    %                 end
+    % 
+    %                 chromo(i+1,:,iter+1)=tempvect;
+    % 
+    %             end
+    % 
 
-                chromo(i,:,iter+1)=tempvect;
-
-            end
-
-            if random2 < pcrossover
-
-                tempvect=zeros(1,nodes);
-
-                tempvect(1:random)=chromo(select(2),1:random,iter);
-
-                newchromoloop=random;
-                for loopchromo=1:nodes
-
-                    if sum(chromo(select(1),loopchromo,iter) ==  tempvect) == 0;
-                        newchromoloop=newchromoloop+1;
-                        tempvect(newchromoloop)= chromo(select(1),loopchromo,iter);
-
-                    end
+                if random2 >= pcrossover
+                    chromo(i,:,iter+1)=chromo(select(1),:,iter);
                 end
-
-                chromo(i+1,:,iter+1)=tempvect;
-
-            end
-
-
-            if random2 >= pcrossover
-                chromo(i,:,iter+1)=chromo(select(1),:,iter);
-                chromo(i+1,:,iter+1)=chromo(select(2),:,iter);
-
             end
         end
 
@@ -252,10 +257,11 @@ for reiter = 1:Reiterate
         
         %% andere dingen
         drawnow
+        disp(['pathlength: ' num2str(bestPath)]);
         if pathlength < bestPath
 
             bestPath = pathlength;
-            disp(['pathlength: ' num2str(bestPath)]);
+            %error(['pathlength: ' num2str(bestPath)]);
 
             BestPathWay = Path(chromosome,:,iter);
 

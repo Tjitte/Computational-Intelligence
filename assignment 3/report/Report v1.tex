@@ -66,15 +66,24 @@ Here we will answer the questions about how to upgrade the intelligence of the a
 Especially for the big rooms we have found a better solution than the normal maze solving algorithm we had before. The way it works is pretty good and still easy enough to implement quickly. If the ant enters a big room we do a check. If the ant has four possible next moves he will do this as long as he has 4 next possible moves:\par
 take a direction just based on the normal solution and forbid him to take the opposite direction again.
 In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if YOU are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.
-
-
- 
- \begin{figure}[p]
+\begin{figure}[p]
     \centering
     \includegraphics[width=1\textwidth]{pseudo.PNG}
     \caption{pseudo code for ant colony optimization}
     \label{fig:speudo}
 \end{figure}
+
+\section{UPGRADING YOUR ANTS WITH INTELLIGENCE}
+\section{PARAMETER OPTIMIZATION}
+\pagebreak
+\section{PART 2: THE TRAVELING ROBOT PROBLEM}
+
+
+
+
+
+ 
+ 
  
  	
 		 
