@@ -26,7 +26,7 @@ end
 
 %% list of variables
 iterations = 1000;              % number of iterations for the tsp
-Reiterate = 1;                  % number of runs for the tsp
+Reiterate = 20;                  % number of runs for the tsp
 runs = 100;                     % number of runs for the point to point routes
 iters = 40;                     % number of iterations for the point to point routes
 f = @shortestPath;              % function for calculating the fastest route between to points
@@ -67,46 +67,46 @@ connection = (nodes*(nodes-1))/2;
 
 
 
-%% Calculating pathlengths between two points in a maze
-
-% looping through all possible routes between to points
-for x=1:connection
-    
-    tempnodes = nodes;
-    while(tempnodes > x)
-        
-            [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-
-        if tempnodes~=nodes
-             
-            if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
-                
-                connectionsf(x,tempnodes) = connections(x,tempnodes);
-                Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
-                connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-                Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-            end
-        end
-        
-        if ~exist('Pathwayf','var') || tempnodes == nodes
-            
-            [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-            connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-            Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-            
-        end
-        
-        disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
-
-        tempnodes = tempnodes-1;
-    end
-    
-    
-    
-end
-
-save('Pathwayf','Pathwayf');
-
+% %% Calculating pathlengths between two points in a maze
+% 
+% % looping through all possible routes between to points
+% for x=1:connection
+%     
+%     tempnodes = nodes;
+%     while(tempnodes > x)
+%         
+%             [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+% 
+%         if tempnodes~=nodes
+%              
+%             if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
+%                 
+%                 connectionsf(x,tempnodes) = connections(x,tempnodes);
+%                 Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
+%                 connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+%                 Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+%             end
+%         end
+%         
+%         if ~exist('Pathwayf','var') || tempnodes == nodes
+%             
+%             [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+%             connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+%             Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+%             
+%         end
+%         
+%         disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
+% 
+%         tempnodes = tempnodes-1;
+%     end
+%     
+%     
+%     
+% end
+% 
+% save('Pathwayf','Pathwayf');
+% 
 bestPath = 100000000;
 for reiter = 1:Reiterate
     %% Creating random chromosomes
