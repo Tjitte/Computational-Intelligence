@@ -1,7 +1,7 @@
 
 %% Input Maze
 
-mazestring = 'Mazes/medium';
+mazestring = 'Mazes/easy';
 
 % input of the mazes 
 Maze = dlmread([mazestring ' maze.txt'],'',1,0);
@@ -366,7 +366,7 @@ while 1==1
         end
     end
     
-    if k==200;
+    if k==100;
         break
     end
     
@@ -423,7 +423,7 @@ end
 lengte = 0;
 lengte = length(pathLength)+lengte-1;
 
-winddir{1}=num2str(lengte);
+winddir{1}=[num2str(lengte) ';'];
 winddir{2}=[num2str(pathLength(2,1)-1) ', ' num2str(pathLength(1,1)-1) ';'];
 
 k=2;
@@ -451,7 +451,7 @@ k=2;
         
     end
 
-fid = fopen('5_medium.txt','w');
+fid = fopen('5_easy.txt','w');
 
 for i=1:2
     fprintf(fid,'%s\n',num2str(winddir{i}));

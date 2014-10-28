@@ -2,32 +2,15 @@ tic
 clear all;
 clc
 
+%% loading previous point to point route data
+
+% load the previous point to point route data
 fid = fopen('Pathwayf.mat');
 if fid~=-1
     load('Pathwayf.mat','Pathwayf');
 end
 
-%% list of variables
-iterations = 100000;
-runs = 30;
-iters = 30;
-Reiterate = 20;
-
-% reading product locations
-fd = fopen('mazes/tsp products.txt');
-itemNumber = textscan(fd,'%f','delimiter',';:,');
-fclose(fd);
-
-for i=3:3:length(itemNumber{1,1})-1
-    locations(i/3,1)=(itemNumber{1,1}(i));
-end
-
-for i=4:3:length(itemNumber{1,1})
-    locations((i-1)/3,2)=((itemNumber{1,1}(i)));
-end
-
-nodes = length(locations(:,1));
-
+% if it existed create a matrix with the point to point route lengths in it
 if exist('Pathwayf','var')
     for i = 1:length(Pathwayf)
         for j = 1:length(Pathwayf)
@@ -36,72 +19,117 @@ if exist('Pathwayf','var')
     end
 end
 
-% 
-% %% Calculating pathlengths between two points in a maze
-% 
-% % initializing
-%
-% connection = (nodes*(nodes-1))/2;
-% if ~exist('connectionsf','var')
-%   connectionsf = ones(nodes,nodes)*10000;
-% end
-% f=@shortestPath;
-% counter = 0;
-% 
-% % Calculating paths and placing in connections
-% for x=1:connection
-%     tempnodes = nodes;
-%     while(tempnodes > x)
-%         
-%             [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-% 
-%         if tempnodes~=18
-%              
-%             if connections(x,tempnodes)<connectionsf(x,tempnodes) ||
-%               connectionsf(x,tempnodes) == 0
-%                 
-%                 connectionsf(x,tempnodes) = connections(x,tempnodes);
-%                 Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
-%                 connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-%                 Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-%             end
-%         end
-%         
-%         if ~exist('Pathwayf','var') || tempnodes == 18
-%             
-%             [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-%             connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-%             Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-%             
-%         end
-%         
-%         disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
-% 
-%         tempnodes = tempnodes-1;
-%         counter = counter + 1;
-%     end
-%     
-%     
-%     
-% end
-% 
-% save('Pathwayf','Pathwayf');
+% if it did not exist create a new matrix for the point to point route lengths
+if ~exist('connectionsf','var')
+  connectionsf = ones(nodes,nodes)*10000;
+end
+
+%% list of variables
+iterations = 1000;              % number of iterations for the tsp
+Reiterate = 1;                  % number of runs for the tsp
+runs = 100;                     % number of runs for the point to point routes
+iters = 40;                     % number of iterations for the point to point routes
+f = @shortestPath;              % function for calculating the fastest route between to points
+
+%% reading in starting, end and products locations
+
+% start and end coordinates
+fd = fopen('mazes/hard coordinates.txt');
+coordinates = textscan(fd,'%f','delimiter',';,:');
+fclose(fd);
+
+% reading product locations
+fd = fopen('mazes/tsp products.txt');
+itemNumber = textscan(fd,'%f','delimiter',';:,');
+fclose(fd);
+
+% writing starting point to locations
+locations(1,:) = [coordinates{1}(1) coordinates{1}(2)];
+
+% writing product x coordinates to locations
+for i=3:3:length(itemNumber{1,1})-1
+    locations(i/3+1,1)=(itemNumber{1,1}(i));
+end
+
+% writing product y coordinates to locations
+for i=4:3:length(itemNumber{1,1})
+    locations((i-1)/3+1,2)=((itemNumber{1,1}(i)));
+end
+
+% writing end point to locations
+locations(length(locations)+1,:) = [coordinates{1}(3) coordinates{1}(4)];
+
+% calculating the ammount of nodes to be taken into account
+nodes = length(locations(:,1));
+
+% calculating number of routes possible bewteen points
+connection = (nodes*(nodes-1))/2;
+
+
+
+%% Calculating pathlengths between two points in a maze
+
+% looping through all possible routes between to points
+for x=1:connection
+    
+    tempnodes = nodes;
+    while(tempnodes > x)
+        
+            [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+
+        if tempnodes~=nodes
+             
+            if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
+                
+                connectionsf(x,tempnodes) = connections(x,tempnodes);
+                Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
+                connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+                Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+            end
+        end
+        
+        if ~exist('Pathwayf','var') || tempnodes == nodes
+            
+            [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+            connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+            Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+            
+        end
+        
+        disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
+
+        tempnodes = tempnodes-1;
+    end
+    
+    
+    
+end
+
+save('Pathwayf','Pathwayf');
+
 bestPath = 100000000;
 for reiter = 1:Reiterate
     %% Creating random chromosomes
     amountchromo = 50;
-    chromo = zeros(amountchromo,nodes,iterations);
+    chromo = zeros(amountchromo,nodes,1);
     random = 1;
     s = 0;
 
     %
     for i=1:length(chromo(:,1,1))
         for j=1:length(chromo(1,:,1))
-            random = round(rand()*18+0.5);
-            while sum(random == chromo(i,:,1)) ~= 0
-                random = round(rand()*18+0.5);
+            
+            if j>1 && j<nodes
+                random = round(rand()*nodes+0.5);
+                while sum(random == chromo(i,:,1)) ~= 0 || random == 1 || random == 20
+                    random = round(rand()*(nodes)+0.5);
+                end
+                chromo(i,j,1) = random;
+            elseif j == 1
+                chromo(i,j,1) = 1;
+            elseif j == nodes;
+                chromo(i,j,1) = 20;
             end
-            chromo(i,j,1) = random;
         end
     end
 
@@ -163,7 +191,7 @@ for reiter = 1:Reiterate
             random2 = rand;
 
             if random2 < pcrossover
-                random = round(rand()*18+0.5);
+                random = round(rand()*nodes+0.5);
 
                 tempvect=zeros(1,nodes);
 
@@ -215,20 +243,34 @@ for reiter = 1:Reiterate
 
 
         %% mutation
-        pmutation = 0.01;
+        pmutation = 0.006;
         for i=1:amountchromo
             for j=1:nodes
-                random = rand;
-                if rand < pmutation
-                    change = chromo(i,j,iter+1);
-                    random2=round(rand()*18+0.5);
-                    chromo(i,j,iter+1)=chromo(i,random2,iter+1);
-                    chromo(i,random2,iter+1)=change;
+                
+                if j>1 && j<nodes-1
+                    random = rand;
+                else
+                    random =2;
+                end
+                
+                if random < pmutation
+                    
+                        change = chromo(i,j,iter+1);
+                        random2 = round(rand()*(nodes)+0.5);
+                        
+                    while random2 == 1 || random2 == 20
+                        random2 = round(rand()*(nodes)+0.5);
+                    end
+                        chromo(i,j,iter+1)=chromo(i,random2,iter+1);
+                        chromo(i,random2,iter+1)=change;
 
                 end
+                
+                    
             end
         end
-
+        
+        %% andere dingen
         drawnow
         if pathlength < bestPath
 
@@ -239,7 +281,7 @@ for reiter = 1:Reiterate
 
         else
             s=s+1;
-            if s>500
+            if s>1000
                 break
             end
             
@@ -248,33 +290,32 @@ for reiter = 1:Reiterate
     end
     toc
 end
-%%
+%% Writing to file
+
 lengte = 0;
 for i=1:length(BestPathWay)
     lengte = length(BestPathWay{i})+lengte-1;
 end
 
-winddir{1}=num2str(lengte);
+lengte = lengte + nodes -2;
+
+winddir{1}=num2str([num2str(lengte) ';']);
 winddir{2}=[num2str(BestPathWay{1}(2,1)-1) ', ' num2str(BestPathWay{1}(1,1)-1) ';'];
 
 k=2;
-for j = 1:nodes
+for j = 1:nodes-1
     for i = 1:length(BestPathWay{j})-1
           
         winddirr = BestPathWay{j}(:,i+1)'-BestPathWay{j}(:,i)';
-       
-        if i == 1
-                        
-            k=k+1;
-            for p = 1:length(locations)
-                if sum(fliplr(locations(p,:))'+1==BestPathWay{j}(:,i))==2
-                    stringproduct = ['takeproduct #' num2str(p) ';'];
-                    winddir{k} = stringproduct;
 
-                end
+        for p = 1:nodes
+            if sum(fliplr(locations(p,:))'+1==BestPathWay{j}(:,i))==2 && p~=1 && p~=nodes
+                k=k+1;
+                stringproduct = ['take product #' num2str(p-1) ';'];
+                winddir{k} = stringproduct;
+
             end
         end
-        
         
         k=k+1;
         if winddirr(1,1) == 0 && winddirr(1,2) == -1
@@ -292,6 +333,9 @@ for j = 1:nodes
         elseif winddirr(1,1) == -1 && winddirr(1,2) == 0
              winddir{k} = '1;';
         
+        else
+            disp(winddirr)
+            disp(k)
         end
         
     end
