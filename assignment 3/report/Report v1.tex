@@ -49,11 +49,11 @@ The parameter n is the estimated pathlength.
  
  \subsection{}
  The following parameters are used in the basic version of our system:\\
- $ iterations = 1000; $\\
- $ ants = 10; $ \\
- $ pher = 100; $\\
- $ evaporation = 0.80; $\\
-converge criterion is when the iterations are done or when the probability of a certain path is higher than 0.99. \\
+ $ iterations = 30; $\\
+ $ ants = 3; $ \\
+ $ pher = estimate of route length; $\\
+ $ evaporation constant = 0.9;we want fast convergence) $\\ 
+converge criterion is when the first ant in 5 iterations take the same path.\\
 \pagebreak
 
 pseudo-code:\\
@@ -66,18 +66,35 @@ Here we will answer the questions about how to upgrade the intelligence of the a
 \subsection{}
 Especially for the big rooms we have found a better solution than the normal maze solving algorithm we had before. The way it works is pretty good and still easy enough to implement quickly. If the ant enters a big room we do a check. If the ant has four possible next moves he will do this as long as he has 4 next possible moves:\par
 take a direction just based on the normal solution and forbid him to take the opposite direction again.
-In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if YOU are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=1\textwidth]{pseudo.PNG}
-    \caption{pseudo code for ant colony optimization}
-    \label{fig:speudo}
-\end{figure}
+In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if you are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.
 
-\section{UPGRADING YOUR ANTS WITH INTELLIGENCE}
 \section{PARAMETER OPTIMIZATION}
+\includegraphics[width=1\textwidth]{.PNG}
+\includegraphics[width=1\textwidth]{.PNG}
+\includegraphics[width=1\textwidth]{.PNG}
 \pagebreak
 \section{PART 2: THE TRAVELING ROBOT PROBLEM}
+
+\begin{figure}[h!]
+  \caption{Plot of different sets of parameters and their convergence for the easy maze.}
+  \centering
+    \includegraphics[width=0.5\textwidth]{}
+    \label{figure1}
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{Plot of different sets of parameters and their convergence for the easy maze.}
+  \centering
+    \includegraphics[width=0.5\textwidth]{gull}
+    \label{fiure2}
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{Plot of different sets of parameters and their convergence for the easy maze.}
+  \centering
+    \includegraphics[width=0.5\textwidth]{gull}
+    \label{figure3}
+\end{figure}
 
 
 
