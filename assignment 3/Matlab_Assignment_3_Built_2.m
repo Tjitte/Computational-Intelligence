@@ -19,11 +19,15 @@ windDir(2,:)=[-1,0];
 windDir(3,:)=[0,-1];
 windDir(4,:)=[1,0];
 
+% setting initial pathlength to a very high number
 pathLength = zeros(2,1000000);
 
-k=0;
+% setting begin position end end position
 beginPos = Maze_c(1,:)+1;
 endPos = Maze_c(2,:)+1;
+
+k=0;
+
 while 1==1
 
     Maze = dlmread([mazestring ' maze.txt'],'',1,0);

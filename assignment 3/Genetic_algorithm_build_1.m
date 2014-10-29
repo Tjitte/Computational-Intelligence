@@ -72,13 +72,16 @@ connection = (nodes*(nodes-1))/2;
 % % looping through all possible routes between to points
 % for x=1:connection
 %     
+%     % Method to loop through all the connections
 %     tempnodes = nodes;
 %     while(tempnodes > x)
-%         
+%             % finding the length and the path by using ACO
 %             [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
 % 
-%         if tempnodes~=nodes
-%              
+%            
+%         %if tempnodes~=nodes
+%              % updating to the best route found. If it is better, change
+%              % it.
 %             if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
 %                 
 %                 connectionsf(x,tempnodes) = connections(x,tempnodes);
@@ -86,8 +89,9 @@ connection = (nodes*(nodes-1))/2;
 %                 connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
 %                 Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
 %             end
-%         end
 %         
+%         %displaying on screen + and transposing paths (1-2 and 2-1 are the
+%         %same path but then in reverse order)
 %         if ~exist('Pathwayf','var') || tempnodes == nodes
 %             
 %             [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
@@ -95,7 +99,7 @@ connection = (nodes*(nodes-1))/2;
 %             Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
 %             
 %         end
-%         
+%         %displaying on screen for waiting checks
 %         disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
 % 
 %         tempnodes = tempnodes-1;
@@ -115,24 +119,32 @@ for reiter = 1:Reiterate
     random = 1;
     s = 0;
 
-    %
+    % looping through all genes
     for i=1:length(chromo(:,1,1))
         for j=1:length(chromo(1,:,1))
             
+            % except for the first and the last ones of each chromosome
+            % since they are the begin and end point.
             if j>1 && j<nodes
+                
+                %putting in random numbers but making sure that there are
+                %not duplicated numbers in each chromosomes
                 random = round(rand()*nodes+0.5);
                 while sum(random == chromo(i,:,1)) ~= 0 || random == 1 || random == 20
                     random = round(rand()*(nodes)+0.5);
                 end
                 chromo(i,j,1) = random;
+            %first must be 1
             elseif j == 1
                 chromo(i,j,1) = 1;
+            %last must be 20
             elseif j == nodes;
                 chromo(i,j,1) = 20;
             end
         end
     end
-
+    
+    % Creating fitness
     fitness = zeros(amountchromo,iterations);
     fitnessRatio = zeros(amountchromo,iterations);
 
@@ -140,6 +152,7 @@ for reiter = 1:Reiterate
         %% fitness ratio
         distribution = zeros(amountchromo,iter);
 
+        %looping through all genes and summing up the pathlength
         for i=1:length(chromo(:,1,iter))
             for j=1:length(chromo(1,:,iter))-1
                 point(1) = chromo(i,j,iter);
@@ -150,16 +163,12 @@ for reiter = 1:Reiterate
             end
         end
         
-%         % first point should be last point
-%         for i = 1:length(chromo(:,1,iter))
-%             Path{i,length(chromo(1,:,iter)),iter}=Pathwayf{(chromo(i,end,iter)),chromo(i,1,iter)};
-%             fitness(i,iter) = fitness(i,iter) + connectionsf((chromo(i,end,iter)),chromo(i,1,iter));
-%         end
-
         [pathlength,chromosome]=min(fitness(:,iter));
+        %Quadratic fitness function to get faster convergence
         fitness(:,iter) = 1./fitness(:,iter).^2*100000;
         fitnessRatio(:,iter) = fitness(:,iter)./sum(fitness(:,iter));
         
+        % creating the distribution with chances
         distribution(1,iter)=0;
         distribution(2:amountchromo+1,iter) = cumsum(fitnessRatio(:,iter));
 
@@ -190,7 +199,9 @@ for reiter = 1:Reiterate
             pcrossover = 0.7;
             random2 = rand;
 
+            %looking if crossover is needed
             if random2 < pcrossover
+                % chosing the cross over point
                 random = round(rand()*nodes+0.5);
 
                 tempvect=zeros(1,nodes);
@@ -198,6 +209,7 @@ for reiter = 1:Reiterate
                 tempvect(1:random)=chromo(select(1),1:random,iter);
 
                 newchromoloop=random;
+                %creating new chromosome
                 for loopchromo=1:nodes
 
                     if sum(chromo(select(2),loopchromo,iter) ==  tempvect) == 0;
@@ -206,11 +218,13 @@ for reiter = 1:Reiterate
 
                     end
                 end
-
+                   % putting new chromosome in chromo matrix
                 chromo(i,:,iter+1)=tempvect;
 
             end
-
+            
+            % creating the crossover with both two parents but then in
+            % the reverse way
             if random2 < pcrossover
 
                 tempvect=zeros(1,nodes);
@@ -244,20 +258,26 @@ for reiter = 1:Reiterate
 
         %% mutation
         pmutation = 0.006;
+        % for all genes in all chromosomes
         for i=1:amountchromo
             for j=1:nodes
                 
+                % except for the first and the last ones (since they are
+                % fixed)
                 if j>1 && j<nodes-1
                     random = rand;
                 else
                     random =2;
                 end
                 
+                % only if you have mutation based on the random number
                 if random < pmutation
-                    
+                        
                         change = chromo(i,j,iter+1);
                         random2 = round(rand()*(nodes)+0.5);
-                        
+                    
+                    %If the number is 20 or 1 then try again, you cannot
+                    %mutate into one of these
                     while random2 == 1 || random2 == 20
                         random2 = round(rand()*(nodes)+0.5);
                     end
@@ -270,7 +290,7 @@ for reiter = 1:Reiterate
             end
         end
         
-        %% andere dingen
+        %% drawings (not important for real algorithm, but for debugging + visualisation)
         drawnow
         if pathlength < bestPath
 
@@ -290,6 +310,7 @@ for reiter = 1:Reiterate
     end
     toc
 end
+
 %% Writing to file
 
 lengte = 0;
