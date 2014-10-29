@@ -67,49 +67,49 @@ connection = (nodes*(nodes-1))/2;
 
 
 
-% %% Calculating pathlengths between two points in a maze
-% 
-% % looping through all possible routes between to points
-% for x=1:connection
-%     
-%     % Method to loop through all the connections
-%     tempnodes = nodes;
-%     while(tempnodes > x)
-%             % finding the length and the path by using ACO
-%             [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-% 
-%            
-%         %if tempnodes~=nodes
-%              % updating to the best route found. If it is better, change
-%              % it.
-%             if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
-%                 
-%                 connectionsf(x,tempnodes) = connections(x,tempnodes);
-%                 Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
-%                 connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-%                 Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-%             end
-%         
-%         %displaying on screen + and transposing paths (1-2 and 2-1 are the
-%         %same path but then in reverse order)
-%         if ~exist('Pathwayf','var') || tempnodes == nodes
-%             
-%             [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
-%             connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
-%             Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
-%             
-%         end
-%         %displaying on screen for waiting checks
-%         disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
-% 
-%         tempnodes = tempnodes-1;
-%     end
-%     
-%     
-%     
-% end
-% 
-% save('Pathwayf','Pathwayf');
+%% Calculating pathlengths between two points in a maze
+
+% looping through all possible routes between to points
+for x=1:connection
+    
+    % Method to loop through all the connections
+    tempnodes = nodes;
+    while(tempnodes > x)
+            % finding the length and the path by using ACO
+            [connections(x,tempnodes),Pathway{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+
+           
+        %if tempnodes~=nodes
+             % updating to the best route found. If it is better, change
+             % it.
+            if connections(x,tempnodes)<connectionsf(x,tempnodes) || connectionsf(x,tempnodes) == 0
+                
+                connectionsf(x,tempnodes) = connections(x,tempnodes);
+                Pathwayf{x,tempnodes} = Pathway{x,tempnodes};
+                connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+                Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+            end
+        
+        %displaying on screen + and transposing paths (1-2 and 2-1 are the
+        %same path but then in reverse order)
+        if ~exist('Pathwayf','var') || tempnodes == nodes
+            
+            [connectionsf(x,tempnodes),Pathwayf{x,tempnodes}] = f(locations(x,:),locations(tempnodes,:),runs,iters);
+            connectionsf(tempnodes,x) = connectionsf(x,tempnodes);
+            Pathwayf{tempnodes,x} = fliplr(Pathwayf{x,tempnodes});
+            
+        end
+        %displaying on screen for waiting checks
+        disp(['From: ' num2str(x) ' to '  num2str(tempnodes) ' | PathLength: ' num2str(connectionsf(x,tempnodes))])
+
+        tempnodes = tempnodes-1;
+    end
+    
+    
+    
+end
+
+save('Pathwayf','Pathwayf');
 
 bestPath = 100000000;
 for reiter = 1:Reiterate
