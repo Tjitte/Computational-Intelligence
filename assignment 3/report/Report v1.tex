@@ -65,11 +65,21 @@ Here we will answer the questions about how to upgrade the intelligence of the a
 Especially for the big rooms we have found a better solution than the normal maze solving algorithm we had before. The way it works is pretty good and still easy enough to implement quickly. If the ant enters a big room we do a check. If the ant has four possible next moves he will do this as long as he has 4 next possible moves:\par
 take a direction just based on the normal solution and forbid him to take the opposite direction again.
 In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if you are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.
+\pagebreak
 
 \section*{PARAMETER OPTIMIZATION}
 Here we will answer the questions about the optimization of the parameters.
 \subsection*{6.}
+As you can see on the three graphs \ref{figure1},\ref{figure2},\ref{figure3} on page \pageref{figure3}, different parameters give a different speed of convergence. What we did to create the graphs is that we checked the path length on each iteration for 10 different runs and took the average. You can see that for the optimization of the parameters it is not easy to see what actually works better since the difference in convergence speed is very small. What we found though is that an higher amount of ants can find a better solution but it also costs a lot more time to calculate. We took 3 ants per iteration since that also works fine and the difference in result is minimal while the difference in calculation speed is big.\par
+Another thing that we found is that the amount of pheromones to drop by each ant is best set on the estimate of the path length. The more pheromones you drop the faster the convergence, but you don't want to converge too quickly to a bad solution so it shouldn't be too high. Also it shouldn't be too low because then you get a very slow convergence and you want the algorithm to be fast. \par
+For the evaporation constant it is actually just the same. If it is very high, then you converge quickly, but maybe to a bad solution, and if it is too low then it takes very long to find good solutions. This is why we kept it on a 0.9 in our program.\\
+\\
+As a summary we found out that it is actually better to let your algorithm convergence faster and iterate it more than to let it converge slower to a good path.
 \subsection*{7.}
+
+As you can see on the three graphs mentioned in the previous question there is a difference in the optimization according to the complexity of the mazes. The bigger the maze the bigger the amount of pheromones you should drop to make it converge more quickly. However the differences are again very small. \par
+The only thing that our group changes for the different mazes is the amount of pheromones dropped. All the other parameters are kept the same for now. However if the maze would get way bigger some other parameters could be changed to improve the calculation time.
+
 
 
 
@@ -163,7 +173,7 @@ Our group used elitism indeed. But not in the formal way. The formal way is to m
   \centering
     \includegraphics[width=0.5\textwidth]{Plot_medium.PNG}
     \caption{Plot of different sets of parameters and their convergence for the medium maze.}
-    \label{fiure2}
+    \label{figure2}
 \end{figure}
 
 \begin{figure}[h!]
