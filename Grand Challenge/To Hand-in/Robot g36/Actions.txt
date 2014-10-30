@@ -1,0 +1,9 @@
+The syntax is the same as in part 2 of assignment 3 with one important difference:
+Since each of you will be running around in the same maze, there is no reason to specify a
+starting location. So comment out the line(s) of code which print the starting position to
+your action file. (Or remove it manually. Just make sure the line disappears from your action
+file for the Grand Challenge.)
+
+Also - obviously, your route should be such that your robot’s end position is the exit of the
+maze. If your robot does not reach the end, or attempts to walk through the wall, he will
+automatically be disqualified.
