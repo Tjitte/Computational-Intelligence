@@ -11,6 +11,8 @@ Maze_c = load([mazestring ' coordinates.txt']);
 
 %% Variables
 
+time = 10*3600;
+
 % input
 pheromone = 850;
 evaporation = 0.9;
@@ -23,7 +25,8 @@ pathLength = zeros(2,1000000);
 beginPos = fliplr(beginPoint+1);
 endPos = (endPoint+1);
 for k=1:n
-
+    
+    tic
     Maze = dlmread([mazestring ' maze.txt'],'',1,0);
     backupMaze = dlmread([mazestring ' maze.txt'],'',1,0);
     mazeSize = size(Maze);
@@ -345,7 +348,7 @@ for k=1:n
        
         
         if itt>5
-            if itt == stopiterations || s>200 || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
+            if itt == stopiterations || s>50  || (length(PosList{itt,1}) == length(PosList{itt-1,1}) && length(PosList{itt,1}) == length(PosList{itt-2,1}) && length(PosList{itt,1}) == length(PosList{itt-3,1})) && length(PosList{itt,1}) == length(PosList{itt-4,1}) && length(PosList{itt,1}) == length(PosList{itt-5,1});
                     
                 converged(k) = length(PosList{itt,ant});
                 [size1,size2,size3] =size(pathLengthAnt);
@@ -361,7 +364,7 @@ for k=1:n
             end
         end
         if stopiterations < 5 
-            if itt == stopiterations || s>200
+            if itt == stopiterations || s>200 || toc>time/products
                 break
             end
         end   
