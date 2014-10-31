@@ -32,9 +32,10 @@ First of all it could be possible that the ant is in a very big room. This would
 Secondly, it could happen that the ant gets in a dead end and needs to go back all the way to a previous choice point.
 
 \subsection*{2.}
-The ants drop Pheromones to let the other ants know the popularity of a certain path. The amount of pheromone dropped is dependent on how long the path is that he took. The equation which determines the amount of pheromones par path is: \\
-$Pheromone_on_link_i = \frac{n}{Path length}$
-The parameter n is the estimated pathlength.
+The ants drop Pheromones to let the other ants know the popularity of a certain path. The amount of pheromone dropped is dependent on how long the path is that he took. The equation which determines the amount of pheromones per path is: \\
+$Pheromone\char`_on\char`_link\char`_i = \frac{n}{Path length}$
+The parameter n is the estimated path length. \\
+The purpose of this algorithm is to find the shortest path between two points.
 
 \subsection*{3.}
  The evaporation of a link i is is actually the Pheromones that are getting away from that link. For example:\\
@@ -48,14 +49,14 @@ The parameter n is the estimated pathlength.
  Here we will answer the questions about the actual implementation.
  
  \subsection*{4.}
- The following parameters are used in the basic version of our system:\\
+ The following parameters are used in the basic version of our system:\\\\
  $ iterations = 30; $\\
  $ ants = 3; $ \\
- $ pher = estimate of route length; $\\
- $ evaporation constant = 0.9;we want fast convergence) $\\ 
-converge criterion is when the first ant in 5 iterations take the same path.\\
-pseudo-code:\\
-\includegraphics[width=1\textwidth]{pseudo.PNG}
+ $ pher = estimate\:of\:route\:length; $\\
+ $ evaporation\:constant = 0.9\:(we\:want\:fast\:convergence) $\\ \\
+Converge criterion is when the first ant in 5 iterations take the same path.\\\\
+Pseudo-code:\\\\
+\includegraphics[width=1\textwidth]{pseudo.png}
 
 \pagebreak
 \section{UPGRADING YOUR ANTS WITH INTELLIGENCE}
@@ -63,8 +64,10 @@ Here we will answer the questions about how to upgrade the intelligence of the a
 
 \subsection*{5.}
 Especially for the big rooms we have found a better solution than the normal maze solving algorithm we had before. The way it works is pretty good and still easy enough to implement quickly. If the ant enters a big room we do a check. If the ant has four possible next moves he will do this as long as he has 4 next possible moves:\par
-take a direction just based on the normal solution and forbid him to take the opposite direction again.
-In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if you are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.
+Take a direction just based on the normal solution and forbid him to take the opposite direction again.
+In this way, he will move but never have loops in a big room. It stops when he hits a wall, bounce and will do it again eventually. This method prevent the ant of doing stupid loops in a big room. For example, if you are in a big room and you cannot see the actual walls. What one would do is start walking until he sees a wall, but never move back until you have found one, since you know there is nothing there but open space. Once you see a wall and you see there is no exit, you will bounce and start walking in the other direction again or just follow the walls. This is actually what this algorithm does so it actually works like a real person would solve the maze big rooms.\\\\
+
+Also the when an ant runs into a dead end it will walk back its route and checks if he can find a new route on every step. When the ant walks back, it will close of the dead end, so the next ant won't take that path again. With this extra piece of intelligence dead ends will be eliminated. 
 \pagebreak
 
 \section*{PARAMETER OPTIMIZATION}
@@ -164,21 +167,21 @@ Our group used elitism indeed. But not in the formal way. The formal way is to m
 \pagebreak
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=0.5\textwidth]{Plot_easy.PNG}
+    \includegraphics[width=0.5\textwidth]{Plot_easy.png}
       \caption{Plot of different sets of parameters and their convergence for the easy maze.}
     \label{figure1}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=0.5\textwidth]{Plot_medium.PNG}
+    \includegraphics[width=0.5\textwidth]{Plot_medium.png}
     \caption{Plot of different sets of parameters and their convergence for the medium maze.}
     \label{figure2}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[width=0.5\textwidth]{Plot_hard.PNG}
+    \includegraphics[width=0.5\textwidth]{Plot_hard.png}
       \caption{Plot of different sets of parameters and their convergence for the hard maze.}
     \label{figure3}
 \end{figure}
